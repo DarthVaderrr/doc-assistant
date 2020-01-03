@@ -81,12 +81,12 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 14);
+/******/ 	return __webpack_require__(__webpack_require__.s = 13);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 1:
+/***/ 0:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -171,14 +171,39 @@ function remove(keys){
 
 /***/ }),
 
-/***/ 14:
+/***/ 1:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+function createCssBySettings(settings){
+    if(typeof settings === 'string') settings=JSON.parse(settings);
+    settings.hover_bg_color = settings.bg_color.replace(/(1\))$/, 0.9 + ')');
+    settings.bg_color = settings.bg_color.replace(/(1\))$/, settings.opacity + ')');
+    settings.color = settings.color.replace(/1\)$/, settings.font_opacity + ')');
+    settings.is_high_light = settings.is_high_light ? '500' : '400';
+    let json = {};
+    for (let key in settings) {
+        if (key === 'font_size') json['--' + key] = settings[key] + 'px'
+        else if (key === 'max_width') json['--' + key] = settings[key] + 'vw'
+        else json['--' + key] = settings[key]
+    };
+    let cssText = JSON.stringify(json).replace(/\"/g, '').replace(/(,--)/g, ";--");
+    cssText = cssText.replace(/\{|\}/g, '');
+    return cssText;
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (createCssBySettings);
+
+/***/ }),
+
+/***/ 13:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _src_js_runtime_storage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
-/* harmony import */ var _src_js_utils_createCssBySettings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
-/* harmony import */ var _src_js_utils_init_settings__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
+/* harmony import */ var _src_js_runtime_storage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(0);
+/* harmony import */ var _src_js_utils_createCssBySettings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(1);
+/* harmony import */ var _src_js_utils_init_settings__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(2);
 
 
 
@@ -346,31 +371,6 @@ function initHtml(settings) {
 /***/ }),
 
 /***/ 2:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-function createCssBySettings(settings){
-    if(typeof settings === 'string') settings=JSON.parse(settings);
-    settings.hover_bg_color = settings.bg_color.replace(/(1\))$/, 0.9 + ')');
-    settings.bg_color = settings.bg_color.replace(/(1\))$/, settings.opacity + ')');
-    settings.color = settings.color.replace(/1\)$/, settings.font_opacity + ')');
-    settings.is_high_light = settings.is_high_light ? '500' : '400';
-    let json = {};
-    for (let key in settings) {
-        if (key === 'font_size') json['--' + key] = settings[key] + 'px'
-        else if (key === 'max_width') json['--' + key] = settings[key] + 'vw'
-        else json['--' + key] = settings[key]
-    };
-    let cssText = JSON.stringify(json).replace(/\"/g, '').replace(/(,--)/g, ";--");
-    cssText = cssText.replace(/\{|\}/g, '');
-    return cssText;
-}
-
-/* harmony default export */ __webpack_exports__["a"] = (createCssBySettings);
-
-/***/ }),
-
-/***/ 3:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

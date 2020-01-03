@@ -81,56 +81,11 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 15);
+/******/ 	return __webpack_require__(__webpack_require__.s = 14);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports) {
-
-function http(url,method='get',data=null,ops,form=true){
-    let xhr=new XMLHttpRequest();
-    return new Promise((resolve,reject)=>{
-        if(method==='get') url+='?'+queryFy(data);
-        xhr.open(method,url);
-        if(ops){
-            for(let i in ops){
-            xhr.setRequestHeader(i, ops[i]) 
-            }
-        }
-        if(form){
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded') 
-            data=queryFy(data)
-        }
-        if(method==='get'){
-            xhr.send(null);
-        }else{
-            xhr.send(data);
-        }
-        xhr.onreadystatechange=e=>{
-            if(xhr.readyState===4){
-                if((xhr.status >=200 && xhr.status < 300) || xhr.status == 304){
-                    resolve(JSON.parse(xhr.responseText))
-                }else{
-                    reject(xhr.responseText)
-                }
-            }
-        }
-    })
-};
-function queryFy (obj) {
-    if(obj===null || obj===undefined) return '';
-    let str='';
-    for(let i in obj){
-        str+=i+'='+obj[i]+'&'
-    }
-    str = str.slice(0,-1)    
-    return str
-  }
-module.exports=http;
-
-/***/ }),
-/* 1 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -214,7 +169,7 @@ function remove(keys){
 
 
 /***/ }),
-/* 2 */
+/* 1 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -238,7 +193,7 @@ function createCssBySettings(settings){
 /* harmony default export */ __webpack_exports__["a"] = (createCssBySettings);
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -257,7 +212,7 @@ function createCssBySettings(settings){
 });
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -447,7 +402,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, exports) {
 
 var g;
@@ -473,7 +428,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
@@ -482,7 +437,7 @@ module.exports = __webpack_amd_options__;
 /* WEBPACK VAR INJECTION */}.call(this, {}))
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports) {
 
 /**
@@ -490,7 +445,7 @@ module.exports = __webpack_amd_options__;
  * 防抖 函数会在延迟结束后再执行
  * 并且在延迟结束前的每次重复触发都会重置延迟时间,可以用于防止鼠标连击或屏幕滚动/resize等高频dom事件
  * @param {function} fn 不能是箭头函数
- * @param {number}  timeout 延迟时间 默认300ms
+ * @param {number}  timeout 延迟时间 默认500ms
  * @param {boolean}  isImmediate  是否立即执行 默认true
  * @returns {function}
  */
@@ -516,7 +471,7 @@ function debounce(fn, wait = 500, isImmediate = true) {
 }
 /**
  * 来自 @Polaris_tl [https://blog.csdn.net/Polaris_tl/article/details/99300458]
- * 节流：稀释函数的触发频率  强制让事件每隔300ms响应一次
+ * 节流：稀释函数的触发频率  强制让事件每隔500ms响应一次
  * 例如 在窗口resize时 首次捕获到事件会直接执行函数  然后每隔300ms才会响应一次事件
  * @param {function} fn 不能是箭头函数
  * @param {number} timeout 间隔时间
@@ -553,6 +508,51 @@ module.exports={
 }
 
 /***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+function http(url,method='get',data=null,ops,form=true){
+    let xhr=new XMLHttpRequest();
+    return new Promise((resolve,reject)=>{
+        if(method==='get') url+='?'+queryFy(data);
+        xhr.open(method,url);
+        if(ops){
+            for(let i in ops){
+            xhr.setRequestHeader(i, ops[i]) 
+            }
+        }
+        if(form){
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded') 
+            data=queryFy(data)
+        }
+        if(method==='get'){
+            xhr.send(null);
+        }else{
+            xhr.send(data);
+        }
+        xhr.onreadystatechange=e=>{
+            if(xhr.readyState===4){
+                if((xhr.status >=200 && xhr.status < 300) || xhr.status == 304){
+                    resolve(JSON.parse(xhr.responseText))
+                }else{
+                    reject(xhr.responseText)
+                }
+            }
+        }
+    })
+};
+function queryFy (obj) {
+    if(obj===null || obj===undefined) return '';
+    let str='';
+    for(let i in obj){
+        str+=i+'='+obj[i]+'&'
+    }
+    str = str.slice(0,-1)    
+    return str
+  }
+module.exports=http;
+
+/***/ }),
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -582,7 +582,7 @@ module.exports={
     root = self;
   }
   var COMMON_JS = !root.JS_MD5_NO_COMMON_JS && typeof module === 'object' && module.exports;
-  var AMD =  true && __webpack_require__(6);
+  var AMD =  true && __webpack_require__(5);
   var ARRAY_BUFFER = !root.JS_MD5_NO_ARRAY_BUFFER && typeof ArrayBuffer !== 'undefined';
   var HEX_CHARS = '0123456789abcdef'.split('');
   var EXTRA = [128, 32768, 8388608, -2147483648];
@@ -1241,16 +1241,10 @@ module.exports={
   }
 })();
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(4), __webpack_require__(5)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(3), __webpack_require__(4)))
 
 /***/ }),
 /* 9 */
-/***/ (function(module, exports) {
-
-
-
-/***/ }),
-/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process, global) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -1279,7 +1273,7 @@ module.exports={
       root = self;
     }
     var COMMON_JS = !root.JS_SHA256_NO_COMMON_JS && typeof module === 'object' && module.exports;
-    var AMD =  true && __webpack_require__(6);
+    var AMD =  true && __webpack_require__(5);
     var ARRAY_BUFFER = !root.JS_SHA256_NO_ARRAY_BUFFER && typeof ArrayBuffer !== 'undefined';
     var HEX_CHARS = '0123456789abcdef'.split('');
     var EXTRA = [-2147483648, 8388608, 32768, 128];
@@ -1772,37 +1766,37 @@ module.exports={
       }
     }
   })();
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(4), __webpack_require__(5)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(3), __webpack_require__(4)))
 
 /***/ }),
+/* 10 */,
 /* 11 */,
 /* 12 */,
 /* 13 */,
-/* 14 */,
-/* 15 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: ../src/js/utils/function-extend.js
-var function_extend = __webpack_require__(7);
+var function_extend = __webpack_require__(6);
 
 // EXTERNAL MODULE: ../src/js/utils/http.js
-var http = __webpack_require__(0);
+var http = __webpack_require__(7);
 var http_default = /*#__PURE__*/__webpack_require__.n(http);
 
-// EXTERNAL MODULE: /Users/yuanyuan/code/我的扩展程序/doc-assistant/node_modules/js-md5/src/md5.js
+// EXTERNAL MODULE: /Users/yuanyuan/code/我的扩展程序/doc-assistant-git/doc-assistant/node_modules/js-md5/src/md5.js
 var md5 = __webpack_require__(8);
 var md5_default = /*#__PURE__*/__webpack_require__.n(md5);
 
-// CONCATENATED MODULE: ../src/js/open-api/baidu.js
+// CONCATENATED MODULE: ../src/js/open-api/baidu-pub.js
 
 
 //这接口极度不稳定 常常返回空字符
 const api={
-    appId:'20191228000370522',
-    psd:'aAYWv9TR2rUL1VS67AZ9',
+    appId:'************',
+    psd:'***************',
     url:'https://api.fanyi.baidu.com/api/trans/vip/translate'
 };
 function baidu(word,from='en',to='zh') {
@@ -1824,73 +1818,9 @@ function baidu(word,from='en',to='zh') {
     let url=api.url;
    return http_default()(url, 'get', data);
 }
-/* harmony default export */ var open_api_baidu = (baidu);
-// CONCATENATED MODULE: ../src/js/open-api/bing.js
-
-//无法使用
-const bing_api={
-    url:'https://cn.bing.com/translate',
-    url2:'https://cn.bing.com/translator'
-}
-function bing(word,from='en',to='zh-Hans'){
-    let data={
-        text:word,
-        from,
-        to
-    };
-    return http_default()(bing_api.url,'get',data);
-}
-
-/* harmony default export */ var open_api_bing = (bing);
-// CONCATENATED MODULE: ../src/js/open-api/jinshan.js
-
-//跨域
-const jinshan_api={
-   url:'http://fy.iciba.com/ajax.php'
-}
-function jinshan (w,f='en',t='zh'){
-   let data={
-       a:'fy',
-       w,
-       f,
-       t
-   };
-   return http_default()(jinshan_api.url,'get',data);
-}
-
-/* harmony default export */ var open_api_jinshan = (jinshan);
-// EXTERNAL MODULE: ../src/js/open-api/google.js
-var google = __webpack_require__(9);
-var google_default = /*#__PURE__*/__webpack_require__.n(google);
-
-// CONCATENATED MODULE: ../src/js/open-api/tmxmall.js
-
-//收费的  一千字=一块钱
-//不支持https 
-const tmxmall_api={
-    set_provider:'http://api.tmxmall.com/v1/http/setmtprovider',
-    translate:'http://api.tmxmall.com/v1/http/mttranslate',
-    user_name:'1476369688@qq.com',
-    client_id:'fc1a15e73fceade6e479d67e67ba2dc6',
-    de:'app',
-    mt_provider:'Google',
-    mt_filed:'general',
-};
-function tmxmall_translate(word,from='en-GB',to='zh-CN') {
-   let url=tmxmall_api.translate;
-   let data={
-    user_name:tmxmall_api.user_name,
-    client_id:tmxmall_api.client_id,
-    de:tmxmall_api.de,
-    text:word,
-    from,
-    to
-   };
-   return http_default()(url, 'get', data);
-}
-/* harmony default export */ var tmxmall = (tmxmall_translate);
+/* harmony default export */ var baidu_pub = (baidu);
 // EXTERNAL MODULE: ../src/js/utils/sha256.js
-var sha256 = __webpack_require__(10);
+var sha256 = __webpack_require__(9);
 var sha256_default = /*#__PURE__*/__webpack_require__.n(sha256);
 
 // CONCATENATED MODULE: ../src/js/utils/jsonp.js
@@ -1949,21 +1879,21 @@ function queryFy (obj) {
   }
 
   /* harmony default export */ var utils_jsonp = (jsonp);
-// CONCATENATED MODULE: ../src/js/open-api/youdao.js
+// CONCATENATED MODULE: ../src/js/open-api/youdao-pub.js
 
 
 // 暂时免费   仅支持jsonp
-const youdao_api = {
+const youdao_pub_api = {
     url: 'https://openapi.youdao.com/api',
-    key: 'MYkBlBvl3BYgO14iPbq8WQl5prbfX3mB',
-    id: '200695504e3c983b'
+    key: '******************************',
+    id: '******'
 }
 function youdao(word,from='en',to='zh-CHS') {
     let random=~~(Math.random()*1000);
     let reqName='someReqName'+random;
     return new Promise((resolve,reject)=>{
-        var appKey = youdao_api.id;
-        var key = youdao_api.key;//注意：暴露appSecret，有被盗用造成损失的风险
+        var appKey = youdao_pub_api.id;
+        var key = youdao_pub_api.key;//注意：暴露appSecret，有被盗用造成损失的风险
         var salt = (new Date).getTime();
         var curTime = Math.round(new Date().getTime() / 1000);
         var query = word;
@@ -1971,7 +1901,7 @@ function youdao(word,from='en',to='zh-CHS') {
         var str1 = appKey + truncate(query) + salt + curTime + key;
         var sign = sha256_default()(str1);
         return utils_jsonp({
-            url: youdao_api.url,
+            url: youdao_pub_api.url,
             data: {
                 q: query,
                 appKey: appKey,
@@ -2000,22 +1930,27 @@ function truncate(q) {
     if (len <= 20) return q;
     return q.substring(0, 10) + len + q.substring(len - 10, len);
 }
-/* harmony default export */ var open_api_youdao = (youdao);
+/* harmony default export */ var youdao_pub = (youdao);
 
 // CONCATENATED MODULE: ../src/js/open-api/index.js
+// import baidu from './baidu.js' //接口不稳定
+// import bing from './bing.js' //无法使用
+// import jinshan from './jinshan.js' //无法使用
+// import google from './google.js' //无法使用
+// import tmxmall from './tmxmall.js' //收费
+// import youdao from './youdao.js' //暂时免费  仅支持jsonp 功能不错  比较稳定
  //接口不稳定
- //无法使用
- //无法使用
- //无法使用
- //收费
+
  //暂时免费  仅支持jsonp 功能不错  比较稳定
 /* harmony default export */ var open_api = ({
-    baidu: open_api_baidu,
-    bing: open_api_bing,
-    google: google_default.a,
-    jinshan: open_api_jinshan,
-    tmxmall: tmxmall,
-    youdao: open_api_youdao
+    // baidu,
+    // bing,
+    // google,
+    // jinshan,
+    // tmxmall,
+    // youdao,
+    youdao:youdao_pub,
+    baidu:baidu_pub
 });
 // CONCATENATED MODULE: ../src/js/translateCallbak/youdao.js
 const wikiUrl={
@@ -2340,13 +2275,13 @@ function initAppAction (appConfig) {
 }
 
 // EXTERNAL MODULE: ../src/js/runtime/storage.js
-var runtime_storage = __webpack_require__(1);
+var runtime_storage = __webpack_require__(0);
 
 // EXTERNAL MODULE: ../src/js/utils/createCssBySettings.js
-var createCssBySettings = __webpack_require__(2);
+var createCssBySettings = __webpack_require__(1);
 
 // EXTERNAL MODULE: ../src/js/utils/init_settings.js
-var init_settings = __webpack_require__(3);
+var init_settings = __webpack_require__(2);
 
 // CONCATENATED MODULE: ./content_script/index.js
 
