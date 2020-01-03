@@ -27,76 +27,60 @@
  4. 百度提供免费的接口 但是有频率限制,有兴趣的旁友可以尝试: [百度翻译](https://api.fanyi.baidu.com/api/trans/product/index)  此项目目录下的open-api/baidu-pub.js封装好了百度api的使用方法 自己填写id和key即可 
 
 # 目录结构
- > node_modules  
- > resources  
-  >> manifest.json  ------插件描述文件  
-  >> app  
-   >>> background  -------后台页面
-    >>>> background.html  
-    >>>> background.js  
-    >>>> background.css  
-
-   >>> content_script 
-    >>>> app-action.js ------定义app的页面行为  
-    >>>> extension-action.js  ------定义app的初始化,通信等行为  
-    >>>> index.js ------content_script入口  
-
-   >>> front-dom  
-    >>>> dom.js  ------仅用于导入app样式,不含任何业务逻辑
-    >>>> dom.less ------用于放置app的样式
-
-   >>> option ------选项设置页
-    >>>> option.html  
-    >>>> option.js  
-    >>>> option.css
-
-   >>> popup ------点击右上角图标弹出的小窗口
-    >>>> popup.html  ------option页面的入口在这里
-    >>>> popup.js  
-    >>>> popup.css
-
-  >> dist ------打包结果存放目录
-   >>> content_script.js ------content_script打包结果  
-   >>> dom.css  ------dom.less打包结果  
-   >>> option.js ------option打包结果  
-   >>> popup.js ------popup打包结果 
-
-  >> src  ------ 存放js和图片资源
-   >>> css 
-    >>>> layout.css ------基础通用布局样式  
-
-   >>> img  -------用到的图标  
-
-   >>> js -------主要业务逻辑代码  
-    >>> runtime  -------兼容chrome和firefox的extension_api封装  
-     >>>> index.js  ------api出口  
-     >>>> storage.js  --------本地存储api封装
-
-   >>> open-api -------翻译接口api封装  
-     >>>> index.js  -------api出口  
-     >>>> youdao.js    -------有道翻译api封装  
-
-   >>> translateCallback   ------- 翻译接口的回调函数
-    >>>> youdao.js   -------有道词典接口的回调函数  
-    >>>> index.js --------回调函数出口
-
-   >>> utils  ------- 一些用到的项目js模块
-    >>>> createCssBySetting.js  -------将偏好设置json映射成css  
-    >>>> function-extend.js    ------- 节流与防抖函数  
-    >>>> http.js   -------- 发送请求的函数  
-    >>>> init_setting.js    --------存放默认设置的对象  
-    >>>> jsonp.js    ------- 针对有道词典封装的特殊的jsonp函数    
-    >>>> sha256.js   ------- 调翻译接口需要的哈希算法
-
- > package.lock.json
-
- > package.json
-
- > postcss.config.js
-
- > readme.md
-
- > webpack.config.js
+ + node_modules  
+ + resources  
+  + manifest.json  ------插件描述文件  
+  + app  
+    - background  -------后台页面
+       -  background.html  
+       -  background.js  
+       -  background.css  
+    - content_script 
+       -  app-action.js ------定义app的页面行为  
+       -  extension-action.js  ------定义app的初始化,通信等行为  
+       -  index.js ------content_script入口  
+    - front-dom  
+       -  dom.js  ------仅用于导入app样式,不含任何业务逻辑
+       -  dom.less ------用于放置app的样式
+    - option ------选项设置页
+       - option.html  
+       - option.js  
+       - option.css
+    - popup ------点击右上角图标弹出的小窗口
+       - popup.html  ------option页面的入口在这里
+       - popup.js  
+       - popup.css
+  + dist ------打包结果存放目录
+    - content_script.js ------content_script打包结果  
+       - dom.css  ------dom.less打包结果  
+       - option.js ------option打包结果  
+       - popup.js ------popup打包结果 
+  + src  ------ 存放js和图片资源
+    - css 
+       - layout.css ------基础通用布局样式  
+    - img  -------用到的图标  
+    - js -------主要业务逻辑代码  
+       - runtime  -------兼容chrome和firefox的extension_api封装  
+       - index.js  ------api出口  
+       - storage.js  --------本地存储api封装
+    - open-api -------翻译接口api封装  
+       - index.js  -------api出口  
+       - youdao.js    -------有道翻译api封装  
+    - translateCallback   ------- 翻译接口的回调函数
+       - youdao.js   -------有道词典接口的回调函数  
+       - index.js --------回调函数出口
+    - utils  ------- 一些用到的项目js模块
+       - createCssBySetting.js  -------将偏好设置json映射成css  
+       - function-extend.js    ------- 节流与防抖函数  
+       - http.js   -------- 发送请求的函数  
+       - init_setting.js    --------存放默认设置的对象  
+       - jsonp.js    ------- 针对有道词典封装的特殊的jsonp函数    
+       - sha256.js   ------- 调翻译接口需要的哈希算法
+ + package.lock.json
+ + package.json
+ + postcss.config.js
+ + readme.md
+ + webpack.config.js
 
 # TODO
  1. 跨浏览器 [未完成]
