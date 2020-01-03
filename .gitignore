@@ -1,0 +1,7 @@
+node_modules
+resources/src/js/open-api/baidu.js
+resources/src/js/open-api/youdao.js
+resources/src/js/open-api/tmxmall.js
+resources/src/js/open-api/bing.js
+resources/src/js/open-api/jinshan.js
+resources/src/js/open-api/google.js

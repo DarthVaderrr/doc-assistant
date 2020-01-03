@@ -1,0 +1,179 @@
+@charset "utf-8";
+@initw:100px;
+@inith:40px;
+.doc-assistant-translate-main{
+    font-weight: var(--is_high_light);
+  }
+  #doc_assistant_darth_vade{
+    font-size: var(--font_size);
+    background: var(--bg_color);
+    color: var(--color);
+    max-width: var(--max_width);
+  }
+  #doc_assistant_darth_vade:hover {
+    background: var(--hover_bg_color);
+  }
+  .doc-assistant-translate-detail{
+    display: var(--result);
+  }
+#doc_assistant_darth_vade{
+        font-family: 
+          system-ui,-apple-system,BlinkMacSystemFont,segoe ui,Roboto,
+          Helvetica,Arial,
+          sans-serif,apple color emoji,segoe ui emoji,segoe ui symbol;
+          word-break: break-all;
+          transition: opacity,transform 0.5s;
+          position:fixed;
+          z-index:9999999;
+          padding:4px 4px 8px 8px;
+          min-width:@initw;
+          min-height:@inith;
+          top:var(--top);
+          left:var(--left);
+          border-radius:8px;
+          line-height:1.2;
+          &:hover{
+            #doc_assistant_options{
+                opacity: 1;
+            }
+        }
+
+    #doc_assistant_container{
+        display:flex;
+        transition: all 0.2s;
+        will-change: transform;
+        flex-direction:column;
+        &:empty{
+            &::after{
+                content: '文档助手';
+                font-size: 0.8em;
+            }
+        }
+    }
+    .doc-assistant-p{
+        display: flex;
+        width: fit-content;
+    }
+    .doc-assistant-wiki{
+        &:hover{
+            color: #39c !important;
+            &::after{
+                opacity: 1;
+            }
+        };
+        &::after{
+            opacity: 0;
+            transition:all 0.4s;
+            content: ' 试试手气?';
+            color: var(--color) !important;
+        }
+        display: var(--wiki);
+        width: fit-content;
+        color: var(--color) !important;
+        font-size: 0.8em !important;
+        text-decoration:underline;
+        cursor:pointer;
+    }
+    #doc_assistant_options{
+        cursor:move;
+        display: flex;
+        justify-content: flex-end;
+        width: 100%;
+        height: 1em;
+        transition: opacity 0.5s;
+        will-change: opacity;
+        opacity: 0;
+    }
+    .doc_assistant_option{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 5px;
+        width: 14px;
+        height: 14px;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 100%;
+        border-radius: 50%;
+        &:hover{
+            background-color: #eee;
+        }
+    }
+    .doc_assistant_loading{
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        animation-name: rotate;
+        animation-duration: 5s;
+        animation-iteration-count: infinite;
+        border: 4px dotted var(--color);
+        animation-timing-function: linear;
+        margin: auto;
+    }
+}
+#doc_assistant_darth_vade[data-state=mini]{
+    width: @inith;
+    height: @inith;
+    opacity: 0 !important;
+    &:hover{
+        opacity: 1 !important;
+    }
+    #doc_assistant_maxfy{
+        display: flex;
+    }
+    #doc_assistant_minify{
+        display: none;
+    }
+    &>#doc_assistant_container{
+        transform: scale3d(0,0,1);
+    }
+    &::after{
+        content: '';
+    }
+}
+#doc_assistant_darth_vade[data-state=max]{
+    #doc_assistant_maxfy{
+        display: none;
+    }
+    #doc_assistant_minify{
+        display: flex;
+    }
+    &>#doc_assistant_container{
+        transform: scale3d(1,1,1);
+    }
+    #doc_assistant_msg{
+        transition:  all 0.3s;
+        color: rgba(236, 149, 98, 0.979);
+        font-size: 1.2em;
+        margin-top: 1em;
+        &:empty{
+            transform: scale(0);
+            margin: 0;
+        }
+    }
+}
+
+#doc_assistant_darth_vade[data-state=closed]{
+    animation-name: close;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: 1;
+}
+#doc_assistant_darth_vade[data-state=empty]{
+    opacity: 0;
+}
+
+@keyframes rotate{
+    to{
+        transform:  rotate(1080deg);
+    }
+}
+
+@keyframes close{
+    from{
+        clip-path: circle(100%);
+    }
+    to{
+        clip-path: circle(0% at 100% 0);
+    }
+}
