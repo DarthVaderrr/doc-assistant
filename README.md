@@ -68,25 +68,25 @@
    >>> img  -------用到的图标  
 
    >>> js -------主要业务逻辑代码  
-    >>>> runtime  -------兼容chrome和firefox的extension_api封装  
-     >>>>> index.js  ------api出口 
-     >>>>> storage.js  --------本地存储api封装
+    >>> runtime  -------兼容chrome和firefox的extension_api封装  
+     >>>> index.js  ------api出口  
+     >>>> storage.js  --------本地存储api封装
 
-   >>>> open-api -------翻译接口api封装  
-     >>>>> index.js  -------api出口  
-     >>>>> youdao.js    -------有道翻译api封装  
+   >>> open-api -------翻译接口api封装  
+     >>>> index.js  -------api出口  
+     >>>> youdao.js    -------有道翻译api封装  
 
-   >>>> translateCallback   ------- 翻译接口的回调函数
-    >>>>> youdao.js   -------有道词典接口的回调函数  
-    >>>>> index.js --------回调函数出口
+   >>> translateCallback   ------- 翻译接口的回调函数
+    >>>> youdao.js   -------有道词典接口的回调函数  
+    >>>> index.js --------回调函数出口
 
-   >>>> utils  ------- 一些用到的项目js模块
-    >>>>> createCssBySetting.js  -------将偏好设置json映射成css  
-    >>>>> function-extend.js    ------- 节流与防抖函数  
-    >>>>> http.js   -------- 发送请求的函数  
-    >>>>> init_setting.js    --------存放默认设置的对象  
-    >>>>> jsonp.js    ------- 针对有道词典封装的特殊的jsonp函数    
-    >>>>> sha256.js   ------- 调翻译接口需要的哈希算法
+   >>> utils  ------- 一些用到的项目js模块
+    >>>> createCssBySetting.js  -------将偏好设置json映射成css  
+    >>>> function-extend.js    ------- 节流与防抖函数  
+    >>>> http.js   -------- 发送请求的函数  
+    >>>> init_setting.js    --------存放默认设置的对象  
+    >>>> jsonp.js    ------- 针对有道词典封装的特殊的jsonp函数    
+    >>>> sha256.js   ------- 调翻译接口需要的哈希算法
 
  > package.lock.json
 
