@@ -13,7 +13,7 @@
    2. 左侧边栏->此firefox
    3. 临时载入附加组件
    4. 选择manifest.json文件  即可生效
- + 或者去扩展程序商店搜索doc-assistant并免费安装
+ + 或者去扩展程序商店搜索doc-assistant并免费安装 [火狐浏览器安装地址](https://addons.mozilla.org/zh-CN/firefox/addon/doc-assistant/?src=search)
 # 调试和修改
  1. cd到webpack.config.js所在目录
  2. sodu npm install 
