@@ -1,4 +1,5 @@
 node_modules
+publish
 resources/src/js/open-api/baidu.js
 resources/src/js/open-api/youdao.js
 resources/src/js/open-api/tmxmall.js
