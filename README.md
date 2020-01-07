@@ -79,7 +79,7 @@
          - function-extend.js    ------- 节流与防抖函数  
          - http.js   -------- 发送请求的函数  
          - init_setting.js    --------存放默认设置的对象  
-         - jsonp.js    ------- 针对有道词典封装的特殊的jsonp函数    
+         - jsonp.js    ------- 封装的jsonp函数    
          - sha256.js   ------- 调翻译接口需要的哈希算法
  + package.lock.json
  + package.json
