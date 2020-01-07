@@ -5,7 +5,6 @@ import translateSuccessCallbacks from '../../src/js/translateCallbak/index.js';
 export default initExtensionAction;
 
 function initExtensionAction(appConfig, App_action, config) {
-    let translateProvider = config.translateProvider;
     //选取事件的回调函数:
     const originHandler = function () {
         //先判断app是否已被用户通过dom按钮关闭:
@@ -13,7 +12,13 @@ function initExtensionAction(appConfig, App_action, config) {
         let current_word = config.current_word;
         var new_word = window.getSelection().toString();
         if (current_word === new_word || !/[A-z]+|\S/g.test(new_word) || new_word.length > appConfig.max_select_len) return; //过滤无效选取
-        if (/[\u4E00-\u9FEF]/g.test(new_word)) return App_action.setWiki(new_word);//汉字不翻译 直接wiki
+        if (/[\u4E00-\u9FEF]/g.test(new_word)) {
+            if(new_word.length<=8){
+                return App_action.setWiki(new_word);//汉字不翻译 直接wiki
+            }else{
+                return;
+            }
+        }
         config.current_word = new_word;//记录去重
         handleWord(new_word);
     }
@@ -22,13 +27,14 @@ function initExtensionAction(appConfig, App_action, config) {
     //准备app的dom模板:
     function prepareAppDom() { 
         var { container, style, app, options, msgContainer,script,settingStyle } = appConfig;
-        const parsedOptions = `<a href="javascript:;" title='关闭' 
+        const parsedOptions =
+       `<a href="javascript:;" title='关闭' 
         style='background-image:url(${appConfig.icons.close})'
         id="doc_assistant_close" class="doc_assistant_option"></a>
-        <a href="javascript:;" title='最小化' 
+        <a href="javascript:;" title='隐藏' 
         style='background-image:url(${appConfig.icons.minify})'
         id="doc_assistant_minify" class="doc_assistant_option"></a>
-        <a href="javascript:;" title='展开' 
+        <a href="javascript:;" title='保持显示' 
         style='background-image:url(${appConfig.icons.maxfy})'
         id="doc_assistant_maxfy" class="doc_assistant_option"></a>`;
 
@@ -41,7 +47,6 @@ function initExtensionAction(appConfig, App_action, config) {
         script.setAttribute('id', appConfig.scriptId);//script
         settingStyle.setAttribute('id',appConfig.settingStyleId)
 
-        app.setAttribute('draggable', 'true');
         app.setAttribute('style','--top:100px;--left:20px');
         options.innerHTML = parsedOptions;
         appendStyleLink(style); //插入link 
@@ -55,6 +60,8 @@ function initExtensionAction(appConfig, App_action, config) {
         app.appendChild(msgContainer);
         document.body.appendChild(app);
         appendScript(script);//插入脚本
+
+        watchMouseOver(options,app);//监听悬浮事件 添加draggable
     }
     function insertSettingStyle(){
         appConfig.settingStyle.innerHTML=`#doc_assistant_darth_vade{${appConfig.settingCssText}}`;
@@ -68,7 +75,15 @@ function initExtensionAction(appConfig, App_action, config) {
         style.setAttribute('href', appConfig.cssSrc);
         document.head.appendChild(style);
     }
-
+    //监听鼠标悬浮事件
+    function watchMouseOver(options,app){
+        options.addEventListener('mouseenter',e=>{
+            app.setAttribute('draggable', 'true');
+        });
+        options.addEventListener('mouseleave',e=>{
+            app.removeAttribute('draggable');
+        });
+    }
     //监听选取事件 
     function startWatch() {
         document.addEventListener('selectionchange', selectionEventHandler);//监听
@@ -77,24 +92,25 @@ function initExtensionAction(appConfig, App_action, config) {
     function stopWatch() {
         document.removeEventListener('selectionchange',config.selectionEventHandler);
         App_action.stopWatchOptionClick();
+        App_action.stopWatchClickOutside();
     }
 
     //翻译
     function translate(word) {
         App_action.loading()
-        return translateAPI[translateProvider](word);
+        return translateAPI[config.translateProvider](word);
     }
 
     //展示翻译结果
     function appendResult(res) {
         App_action.setState('max')
-        let parsedHTML = translateSuccessCallbacks[translateProvider](res);//根据翻译源选择回调函数
+        let parsedHTML = translateSuccessCallbacks[config.translateProvider](res);//根据翻译源选择回调函数
         App_action.setContent(parsedHTML);
     }
 
     //处理单词：
     function handleWord(word) {
-        translate(word).then(res => {
+        translate(word).then((res) => {
             appendResult(res)
         }).catch(err => {
             console.error(err)

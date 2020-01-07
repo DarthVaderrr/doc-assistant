@@ -11,12 +11,13 @@
     max-width: var(--max_width);
   }
   #doc_assistant_darth_vade:hover {
-    background: var(--hover_bg_color);
+    background: var(--hover_bg_color) !important;
   }
   .doc-assistant-translate-detail{
     display: var(--result);
   }
 #doc_assistant_darth_vade{
+        text-align: left;
         font-family: 
           system-ui,-apple-system,BlinkMacSystemFont,segoe ui,Roboto,
           Helvetica,Arial,
@@ -32,13 +33,15 @@
           left:var(--left);
           border-radius:8px;
           line-height:1.2;
+          transition: opacity 0.5s;
           &:hover{
             #doc_assistant_options{
-                opacity: 1;
+                opacity: 1 !important;
             }
         }
 
     #doc_assistant_container{
+        cursor: text;
         display:flex;
         transition: all 0.2s;
         will-change: transform;
@@ -56,7 +59,7 @@
     }
     .doc-assistant-wiki{
         &:hover{
-            color: #39c !important;
+            color: #39c;
             &::after{
                 opacity: 1;
             }
@@ -65,12 +68,12 @@
             opacity: 0;
             transition:all 0.4s;
             content: ' 试试手气?';
-            color: var(--color) !important;
+            color: var(--color);
         }
         display: var(--wiki);
         width: fit-content;
-        color: var(--color) !important;
-        font-size: 0.8em !important;
+        color: var(--color);
+        font-size: 0.8em;
         text-decoration:underline;
         cursor:pointer;
     }
@@ -112,8 +115,8 @@
     }
 }
 #doc_assistant_darth_vade[data-state=mini]{
-    width: @inith;
-    height: @inith;
+    // width: @inith;
+    // height: @inith;
     opacity: 0 !important;
     &:hover{
         opacity: 1 !important;
@@ -124,9 +127,9 @@
     #doc_assistant_minify{
         display: none;
     }
-    &>#doc_assistant_container{
-        transform: scale3d(0,0,1);
-    }
+    // &>#doc_assistant_container{
+    //     transform: scale3d(0,0,1);
+    // }
     &::after{
         content: '';
     }
@@ -161,6 +164,9 @@
 }
 #doc_assistant_darth_vade[data-state=empty]{
     opacity: 0;
+    &:hover{
+        opacity: 1 !important;
+    }
 }
 
 @keyframes rotate{

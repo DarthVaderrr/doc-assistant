@@ -12,7 +12,7 @@ html{
     display: flex;
     width: fit-content;
 }
-#open_setting{
+.btn{
     margin-top: 1em;
     border-radius: 2px;
     -webkit-border-radius: 2px;

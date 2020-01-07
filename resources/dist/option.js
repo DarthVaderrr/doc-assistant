@@ -91,19 +91,19 @@
 
 "use strict";
 let context, runtime, contextName;
-const chromeName = 'chrome', firefoxName = 'firefox';
+const CHROME = 'chrome', FIREFOX = 'firefox';
 try {
     runtime = browser.runtime;
     context = browser;
-    contextName = 'firefox';
+    contextName = FIREFOX;
 } catch (err) {
     runtime = chrome.runtime
     context = chrome;
-    contextName = 'chrome';
+    contextName = CHROME;
 };
 function get(key){
     return new Promise((resolve,reject)=>{
-        if (contextName === 'chrome') {
+        if (contextName === CHROME) {
             try{
                 context.storage.local.get(key, res => {
                     resolve(res)
@@ -123,7 +123,7 @@ function get(key){
 
 function set(obj){
     return new Promise((resolve,reject)=>{
-        if (contextName === 'chrome') {
+        if (contextName === CHROME) {
             try{
                 context.storage.local.set(obj, res => {
                     resolve(res)
@@ -144,7 +144,7 @@ function set(obj){
 function remove(keys){
     // string | string[]
     return new Promise((resolve,reject)=>{
-        if (contextName === 'chrome') {
+        if (contextName === CHROME) {
             try{
                 context.storage.local.remove(keys, res => {
                     resolve(res)
@@ -177,7 +177,7 @@ function remove(keys){
 "use strict";
 function createCssBySettings(settings){
     if(typeof settings === 'string') settings=JSON.parse(settings);
-    settings.hover_bg_color = settings.bg_color.replace(/(1\))$/, 0.9 + ')');
+    settings.hover_bg_color = settings.bg_color.replace(/([0]|[0]\.\d|[1])\)$/, 0.9 + ')');
     settings.bg_color = settings.bg_color.replace(/(1\))$/, settings.opacity + ')');
     settings.color = settings.color.replace(/1\)$/, settings.font_opacity + ')');
     settings.is_high_light = settings.is_high_light ? '500' : '400';
@@ -201,7 +201,7 @@ function createCssBySettings(settings){
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _src_js_runtime_storage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(0);
+/* harmony import */ var _src_js_extension_api_storage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(0);
 /* harmony import */ var _src_js_utils_createCssBySettings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(1);
 /* harmony import */ var _src_js_utils_init_settings__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(2);
 
@@ -224,18 +224,18 @@ let defaultSettings;
 
 init();
 function init() {
-    _src_js_runtime_storage__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"].get('settings').then(res=>{
-            // console.log(res);
-            let {settings}=res;
-            if (settings) {
-                defaultSettings = JSON.parse(settings.newValue||settings);
-            } else {
-                defaultSettings = { ...config.init_settings };
-            };
-            initDom(defaultSettings)
-        }).catch(err=>{
-            console.error(err)
-        })
+    _src_js_extension_api_storage__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"].get('settings').then(res => {
+        // console.log(res);
+        let { settings } = res;
+        if (settings) {
+            defaultSettings = JSON.parse(settings.newValue || settings);
+        } else {
+            defaultSettings = { ...config.init_settings };
+        };
+        initDom(defaultSettings)
+    }).catch(err => {
+        console.error(err)
+    })
 };
 function initDom(settings) {
     document.querySelector('.form').innerHTML = initHtml(settings);
@@ -260,26 +260,20 @@ document.addEventListener('click', e => {
 })
 
 function save(settings) {
-    _src_js_runtime_storage__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"].set(
-            { 
-              'settings':JSON.stringify(settings)
-            }).then(res=>{
-                // console.log(settings)
-                // console.log('保存成功')
-            }).catch(err=>{
-                alert('保存失败,sorry~')
-            })
+    _src_js_extension_api_storage__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"].set(
+        {
+            'settings': JSON.stringify(settings)
+        }).then(res => {
+            // console.log(settings)
+            // console.log('保存成功')
+        }).catch(err => {
+            alert('保存失败,sorry~')
+        })
 }
 function reset() {
-    if(contextName==='chrome'){
-        context.storage.local.remove('settings',res=>{
-            init();
-        })
-    }else{
-        context.storage.local.remove('settings').then(res=>{
-            init()
-        })
-    }
+    _src_js_extension_api_storage__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"].remove('settings').then(res => {
+        init()
+    })
 }
 function mapSetting() {
     for (let i of document.querySelectorAll('label+*')) {
@@ -311,7 +305,7 @@ function initHtml(settings) {
     <form class="browser-style form column">
     <div>
         <label for="max_word_len">翻译文本长度限制</label>
-        <input id="max_word_len" step="5" value="${settings.max_word_len}" type="number" max="40" placeholder="1~40">
+        <input id="max_word_len" step="5" value="${settings.max_word_len}" type="number" max="100" placeholder="1~100">
     </div>
     <div>
         <label for="font_size">文字大小基准</label>
@@ -344,7 +338,14 @@ function initHtml(settings) {
     <div>
             <label for="font_opacity">字体透明度</label>
             <input type="number" value="${settings.font_opacity}" step="0.1" max="1" placeholder="0~1" id="font_opacity">
-        </div>
+    </div>
+    <div>
+        <label for="provider">选择翻译方式</label>
+        <select name="provider" id="provider">
+            <option value="youdao" ${settings.provider === 'youdao' ? 'selected' : ''}>有道词典</option>
+            <option value="baidu" ${settings.provider === 'baidu' ? 'selected' : ''}>百度翻译</option>
+        </select>
+    </div>
     <div>
         <label for="result">是否显示完整释义</label>
         <select name="result" id="result">
@@ -385,7 +386,8 @@ function initHtml(settings) {
     max_width: "20",
     result: "block",
     wiki:"flex",
-    hover_bg_color: "rgba(0,0,0,0.9)"
+    hover_bg_color: "rgba(0,0,0,0.9)",
+    provider:'youdao'
 });
 
 /***/ })

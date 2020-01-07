@@ -4,20 +4,48 @@ const wikiUrl = {
 };
 export default initAppAction;
 
-function initAppAction (appConfig) {
+function initAppAction (appConfig,context,config) {
     let { app, container } = appConfig;
-    
     const optionClickHandler=function (e) {
-        if (e.target.id === 'doc_assistant_close') setState('closed')
-        if (e.target.id === 'doc_assistant_minify') setState('mini')
-        if (e.target.id === 'doc_assistant_maxfy') setState('max')
+        if (e.target.id === 'doc_assistant_close') {
+            showToast('可在右上角重新打开');
+            setTimeout(() => {
+                setState('closed')
+            }, 800);
+        }
+        if (e.target.id === 'doc_assistant_minify') {
+            setState('mini');
+            watchClickOutside();
+        }
+        if (e.target.id === 'doc_assistant_maxfy') {
+            setState('max');
+            stopWatchClickOutside();
+        }
+        if (e.target.id === 'doc_assistant_setting') context.runtime.openOptionsPage();//45以下版本不支持
     }
+
+    const clickOutSideHandler=e=>{
+        let target=e.target;
+        let isClickIn=false;
+        while(target){
+            if(target===document.documentElement) break;
+            if(target.getAttribute('id')==='doc_assistant_darth_vade'){
+             isClickIn=true;
+                break;
+            };
+            target=target.parentNode;
+        };
+        if(!isClickIn) minify()
+     };
     
     function setContent(parsedHTML) {
         container.innerHTML = parsedHTML;
     }
     function setState(state) {
-        app.dataset.state = state;
+        if(state==='closed'){
+            shutDownApp();
+        }
+        app.dataset.state = state;//app是node节点
         appConfig.app_state = state;
     }
     //展示信息
@@ -29,7 +57,11 @@ function initAppAction (appConfig) {
             appConfig.msgContainer.innerHTML='';
         }, duration);
     }
-
+    function shutDownApp(){
+        document.removeEventListener('selectionchange',config.selectionEventHandler);
+        stopWatchOptionClick();
+        stopWatchClickOutside();
+    }
     function minify() {
         setState('mini');
     };
@@ -58,19 +90,10 @@ function initAppAction (appConfig) {
         document.getElementById('doc_assistant_darth_vade').removeEventListener('click',optionClickHandler);
     }
     function watchClickOutside(){
-        document.addEventListener('click',e=>{
-           let target=e.target;
-           let isClickIn=false;
-           while(target){
-               if(target===document.documentElement) break;
-               if(target.getAttribute('id')==='doc_assistant_darth_vade'){
-                isClickIn=true;
-                   break;
-               };
-               target=target.parentNode;
-           };
-           if(!isClickIn) minify()
-        })
+        document.addEventListener('click',clickOutSideHandler)
+    }
+    function stopWatchClickOutside(){
+        document.removeEventListener('click',clickOutSideHandler)
     }
     function watchAppDrag(){
         let x,y,startx,starty;
@@ -108,6 +131,7 @@ function initAppAction (appConfig) {
         showToast,
         hideLoading,
         watchClickOutside,
+        stopWatchClickOutside,
         watchAppDrag,
         enableResize
     };

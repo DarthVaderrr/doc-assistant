@@ -81,74 +81,134 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 12);
+/******/ 	return __webpack_require__(__webpack_require__.s = 15);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 12:
-/***/ (function(module, exports) {
+/***/ 15:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-let context,runtime,contextName;
-const chromeName='chrome',firefoxName='firefox';
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+
+// CONCATENATED MODULE: ../src/js/extension-api/tabs.js
+let context, runtime, contextName;
+const CHROME = 'chrome', FIREFOX = 'firefox';
 try {
-  runtime = browser.runtime;
-  context = browser;
-  contextName='firefox';
+    runtime = browser.runtime;
+    context = browser;
+    contextName = FIREFOX;
 } catch (err) {
-  runtime=chrome.runtime
-  context = chrome;
-  contextName='chrome';
+    runtime = chrome.runtime
+    context = chrome;
+    contextName = CHROME;
+};
+
+function query(options){
+    return new Promise((resolve,reject)=>{
+        if(contextName===CHROME){
+            try{
+                context.tabs.query(options,tabs=>{
+                    resolve(tabs)
+                })
+            }catch(err){
+                reject(err)
+            }
+        }else{
+            context.tabs.query(options).then(res=>{
+                resolve(res)
+            }).catch(err=>{
+                reject(err)
+            })
+        }
+    })
+}
+
+function sendMessage(id,msg){
+    return new Promise((resolve,reject)=>{
+        if(contextName===CHROME){
+            try{
+                context.tabs.sendMessage(id,msg,res=>{
+                    resolve(res)
+                })
+            }catch(err){
+                reject(err)
+            }
+        }else{
+            context.tabs.sendMessage(id,msg).then(res=>{
+                resolve(res)
+            }).catch(err=>{
+                reject(err)
+            })
+        }
+    })
+}
+
+/* harmony default export */ var tabs = ({
+    query,
+    sendMessage
+});
+// CONCATENATED MODULE: ./popup/popup.js
+
+let popup_context, popup_runtime, popup_contextName;
+const popup_CHROME = 'chrome', popup_FIREFOX = 'firefox';
+try {
+  popup_runtime = browser.runtime;
+  popup_context = browser;
+  popup_contextName = popup_CHROME;
+} catch (err) {
+  popup_runtime = chrome.runtime
+  popup_context = chrome;
+  popup_contextName = popup_FIREFOX;
 };
 
 excuteContentScript();//这个不管用户点不点图标都会执行  然后执行content_scripts 
 
-context.tabs.query({active: true, currentWindow: true}, function(tabs){
-  context.tabs.sendMessage(tabs[0].id, {msg:'hello'}, function(response) {
-      //  console.log(response)
-  });  
-});
 
-context.storage.onChanged.addListener((storage)=>{
+popup_context.storage.onChanged.addListener((storage) => {
   // console.log(storage.userSettingCss)
 });
 
-document.getElementById('open_setting').addEventListener('click',e=>{
-  runtime.openOptionsPage();//打开设置面板
+
+//文档内的点击事件 统一托管:
+document.addEventListener('click', e => {
+  if(e.target.getAttribute('id')==='open_setting') popup_runtime.openOptionsPage();//打开设置面板
+  if(e.target.getAttribute('id')==='reboot') rebootApp();
 })
 
-function sendMsgFirefox(){
-  runtime.sendMessage({
-    msg:'hello'
-  }).then(res=>{
-    console.log(res)
-  })
-}
-function sendMsgChrome(id){
-  runtime.sendMessage({
-    msg:"hello"
-  },res=>{
-    console.log(res)
-  })
+
+function rebootApp(){
+  tabs.query({ active: true, currentWindow: true }).then(
+    function (tabList) {
+      tabs.sendMessage(tabList[0].id, { action: 'open' }).then(response => {
+        //  console.log(response)
+      }).catch(err => {
+        console.error(err)
+      })
+    }).catch(err => {
+      console.error(err)
+    })
 }
 
+
 function excuteContentScript() {
-  try{
+  try {
     _chrome();
-  }catch(err){
+  } catch (err) {
     console.error(err);
     _firefox()
   }
   function _chrome() {
-      context.tabs.executeScript(
-        { file: "/content_scripts/extension.js" },
-        (res)=>{
-          console.log('running in chrome')
-        }
-      )
+    popup_context.tabs.executeScript(
+      { file: "/content_scripts/extension.js" },
+      (res) => {
+        console.log('running in chrome')
+      }
+    )
   };
   function _firefox() {
-    context.tabs.executeScript({ file: "/content_scripts/extension.js" })
+    popup_context.tabs.executeScript({ file: "/content_scripts/extension.js" })
       .then((res) => {
         console.log('runing in firefox')
       })

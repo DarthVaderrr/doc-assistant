@@ -12,6 +12,7 @@ function jsonp(options){
 
     /**注册回调 */
     let cb_ctx=document.createElement('script');//用于注册回调函数 
+    cb_ctx.setAttribute('charset','UTF-8');
     cb_ctx.innerHTML=`${data.callback}=function (res){
         ${jsonContainerId}.innerHTML=JSON.stringify(res); //用data.callback命名回调函数 回调函数执行时 将res写入另一个div
     }`;
@@ -21,6 +22,7 @@ function jsonp(options){
     let query=queryFy(data);
     url+='?'+query;
     let req= document.createElement('script');
+    req.setAttribute('charset','UTF-8');
     req.setAttribute('src',url);
     req.setAttribute('id',options.reqName);
     document.documentElement.appendChild(req);

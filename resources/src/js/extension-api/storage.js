@@ -1,17 +1,17 @@
 let context, runtime, contextName;
-const chromeName = 'chrome', firefoxName = 'firefox';
+const CHROME = 'chrome', FIREFOX = 'firefox';
 try {
     runtime = browser.runtime;
     context = browser;
-    contextName = 'firefox';
+    contextName = FIREFOX;
 } catch (err) {
     runtime = chrome.runtime
     context = chrome;
-    contextName = 'chrome';
+    contextName = CHROME;
 };
 function get(key){
     return new Promise((resolve,reject)=>{
-        if (contextName === 'chrome') {
+        if (contextName === CHROME) {
             try{
                 context.storage.local.get(key, res => {
                     resolve(res)
@@ -31,7 +31,7 @@ function get(key){
 
 function set(obj){
     return new Promise((resolve,reject)=>{
-        if (contextName === 'chrome') {
+        if (contextName === CHROME) {
             try{
                 context.storage.local.set(obj, res => {
                     resolve(res)
@@ -52,7 +52,7 @@ function set(obj){
 function remove(keys){
     // string | string[]
     return new Promise((resolve,reject)=>{
-        if (contextName === 'chrome') {
+        if (contextName === CHROME) {
             try{
                 context.storage.local.remove(keys, res => {
                     resolve(res)

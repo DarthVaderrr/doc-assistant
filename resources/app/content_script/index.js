@@ -1,10 +1,9 @@
 import initExtensionAction from './extension-action';
 import initAppAction from './app-action';
-import storage from '../../src/js/runtime/storage';
+import storage from '../../src/js/extension-api/storage';
 import createCssBySettings from '../../src/js/utils/createCssBySettings';
 import init_settings from '../../src/js/utils/init_settings';
 let context, runtime;
-
 try {
     runtime = browser.runtime;
     context = browser;
@@ -15,14 +14,15 @@ try {
 
 /*初始化配置 */
 const config = {
-    translateProvider: 'youdao',
+    translateProvider: 'youdao', //支持有道 百度 
     current_word: null,
     App_action:null,
     Extension_action:null,
     web_accessible_resources: {
-        maxfy: "src/img/maxfy.svg",
-        minify: "src/img/minify.svg",
-        close: "src/img/close.svg",
+        maxfy: "dist/img/keep.svg",
+        minify: "dist/img/minify.svg",
+        close: "dist/img/close.svg",
+        setting: "dist/img/setting.svg",
         css: "dist/dom.css",
         script: "dist/dom.js"
     }
@@ -48,7 +48,8 @@ const appConfig = {
     icons: {
         minify: runtime.getURL(config.web_accessible_resources.minify),
         maxfy: runtime.getURL(config.web_accessible_resources.maxfy),
-        close: runtime.getURL(config.web_accessible_resources.close)
+        close: runtime.getURL(config.web_accessible_resources.close),
+        setting:runtime.getURL(config.web_accessible_resources.setting)
     },
     app_state: 'empty', //mini closed max empty
 };
@@ -70,7 +71,7 @@ storage.get('settings').then(res=>{
         setting_json=init_settings;//使用默认配置
     }
     appConfig.settingCssText=createCssBySettings(setting_json);
-    getAndSetMaxLenBySettings(setting_json);
+    setConfig(setting_json);
     init();
 })
 
@@ -80,7 +81,7 @@ function init() {
     /*防止重复实例化*/
     window.hasRun = true;
     /*防止重复实例化*/
-    const App_action = initAppAction(appConfig);
+    const App_action = initAppAction(appConfig,context,config);
     config.App_action=App_action;
     const Extension_action = initExtensionAction(appConfig, App_action, config);
     config.Extension_action=Extension_action;
@@ -97,26 +98,27 @@ function init() {
 context.runtime.onMessage.addListener((message, sender, sendback) => {
     //来自popup的事件
     // console.log(message)
-    sendback('hi')
+    if(message.action==='open'){
+        config.App_action.showToast('文档助手已启动',1200);
+        config.App_action.setState('max');
+    }
+    sendback('已启动');
 })
 
 const handleStorageChange=(storage)=>{
     let {settings}=storage;
     settings=settings.newValue || settings.oldValue ||settings;
-    // console.log('修改设置',storage)
+    let settingObj=JSON.parse(settings);
+    // console.log('修改设置',settingObj);
     appConfig.settingCssText=createCssBySettings(settings);
     config.Extension_action.insertSettingStyle();
-    getAndSetMaxLenBySettings(settings);
+    setConfig(settingObj);
     config.App_action.showToast('设置已生效',3000);
   }
 //设置更新:
 context.storage.onChanged.addListener(handleStorageChange);
 
-function getAndSetMaxLenBySettings(settings){
-    if(typeof settings === 'object') {
-        appConfig.max_select_len=settings.max_word_len-0;
-    }else{
-        /"max_word_len":"(\d+)"/.test(settings);
-        appConfig.max_select_len=RegExp.$1-0;//从json中提取max_len
-    }
+function setConfig(obj){
+    appConfig.max_select_len=obj.max_word_len-0;
+    config.translateProvider=obj.provider;
 }

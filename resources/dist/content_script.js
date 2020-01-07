@@ -90,19 +90,19 @@
 
 "use strict";
 let context, runtime, contextName;
-const chromeName = 'chrome', firefoxName = 'firefox';
+const CHROME = 'chrome', FIREFOX = 'firefox';
 try {
     runtime = browser.runtime;
     context = browser;
-    contextName = 'firefox';
+    contextName = FIREFOX;
 } catch (err) {
     runtime = chrome.runtime
     context = chrome;
-    contextName = 'chrome';
+    contextName = CHROME;
 };
 function get(key){
     return new Promise((resolve,reject)=>{
-        if (contextName === 'chrome') {
+        if (contextName === CHROME) {
             try{
                 context.storage.local.get(key, res => {
                     resolve(res)
@@ -122,7 +122,7 @@ function get(key){
 
 function set(obj){
     return new Promise((resolve,reject)=>{
-        if (contextName === 'chrome') {
+        if (contextName === CHROME) {
             try{
                 context.storage.local.set(obj, res => {
                     resolve(res)
@@ -143,7 +143,7 @@ function set(obj){
 function remove(keys){
     // string | string[]
     return new Promise((resolve,reject)=>{
-        if (contextName === 'chrome') {
+        if (contextName === CHROME) {
             try{
                 context.storage.local.remove(keys, res => {
                     resolve(res)
@@ -175,7 +175,7 @@ function remove(keys){
 "use strict";
 function createCssBySettings(settings){
     if(typeof settings === 'string') settings=JSON.parse(settings);
-    settings.hover_bg_color = settings.bg_color.replace(/(1\))$/, 0.9 + ')');
+    settings.hover_bg_color = settings.bg_color.replace(/([0]|[0]\.\d|[1])\)$/, 0.9 + ')');
     settings.bg_color = settings.bg_color.replace(/(1\))$/, settings.opacity + ')');
     settings.color = settings.color.replace(/1\)$/, settings.font_opacity + ')');
     settings.is_high_light = settings.is_high_light ? '500' : '400';
@@ -208,7 +208,8 @@ function createCssBySettings(settings){
     max_width: "20",
     result: "block",
     wiki:"flex",
-    hover_bg_color: "rgba(0,0,0,0.9)"
+    hover_bg_color: "rgba(0,0,0,0.9)",
+    provider:'youdao'
 });
 
 /***/ }),
@@ -531,6 +532,7 @@ function http(url,method='get',data=null,ops,form=true){
             xhr.send(data);
         }
         xhr.onreadystatechange=e=>{
+            console.log(xhr)
             if(xhr.readyState===4){
                 if((xhr.status >=200 && xhr.status < 300) || xhr.status == 304){
                     resolve(JSON.parse(xhr.responseText))
@@ -1838,6 +1840,7 @@ function jsonp(options){
 
     /**注册回调 */
     let cb_ctx=document.createElement('script');//用于注册回调函数 
+    cb_ctx.setAttribute('charset','UTF-8');
     cb_ctx.innerHTML=`${data.callback}=function (res){
         ${jsonContainerId}.innerHTML=JSON.stringify(res); //用data.callback命名回调函数 回调函数执行时 将res写入另一个div
     }`;
@@ -1847,6 +1850,7 @@ function jsonp(options){
     let query=queryFy(data);
     url+='?'+query;
     let req= document.createElement('script');
+    req.setAttribute('charset','UTF-8');
     req.setAttribute('src',url);
     req.setAttribute('id',options.reqName);
     document.documentElement.appendChild(req);
@@ -1933,24 +1937,22 @@ function truncate(q) {
 /* harmony default export */ var youdao_pub = (youdao);
 
 // CONCATENATED MODULE: ../src/js/open-api/index.js
-// import baidu from './baidu.js' //接口不稳定
+// import baidu from './baidu.js' //请将这行注释掉  用baidu-pub那行
+ // 百度接口请用这行
+
 // import bing from './bing.js' //无法使用
 // import jinshan from './jinshan.js' //无法使用
 // import google from './google.js' //无法使用
 // import tmxmall from './tmxmall.js' //收费
-// import youdao from './youdao.js' //暂时免费  仅支持jsonp 功能不错  比较稳定
- //接口不稳定
-
- //暂时免费  仅支持jsonp 功能不错  比较稳定
+// import youdao from './youdao.js' //请将这行注释掉  youdao-pub那行
+ // 有道词典接口请用这行
 /* harmony default export */ var open_api = ({
-    // baidu,
+    baidu: baidu_pub,
     // bing,
     // google,
     // jinshan,
     // tmxmall,
-    // youdao,
-    youdao:youdao_pub,
-    baidu:baidu_pub
+    youdao: youdao_pub,
 });
 // CONCATENATED MODULE: ../src/js/translateCallbak/youdao.js
 const wikiUrl={
@@ -2024,11 +2026,32 @@ function youdao_youdao(obj) {
 }
 
 /* harmony default export */ var translateCallbak_youdao = (youdao_youdao);
+// CONCATENATED MODULE: ../src/js/translateCallbak/baidu.js
+const baidu_wikiUrl={
+    baidu:'https://baike.baidu.com/item/',//百度百科 后面加关键词
+    wiki:'https://zh-wiki.info/wiki/'//维基百科  后面加关键词
+};
+
+function baidu_baidu(obj){
+    // console.log(obj);
+    let originWord=obj.originWordDarthVade;
+    let query=`<div class="doc-assistant-translate">${originWord}</div>`
+    let translate= obj.trans_result.map(i=>`<div class="doc-assistant-translate">${i.src}:${i.dst}</div>`).join('')
+    let wiki='';
+    if(!/\s/g.test(originWord)){
+       wiki=`<a href='${baidu_wikiUrl.wiki}${originWord}' target='__blank'  class="doc-assistant-wiki">维基百科 ${originWord}</a>
+        <a href='${baidu_wikiUrl.baidu}${originWord}' target='__blank'  class="doc-assistant-wiki">百度百科 ${originWord}</a>`
+    };
+    return query+translate+wiki;
+}
+
+/* harmony default export */ var translateCallbak_baidu = (baidu_baidu);
 // CONCATENATED MODULE: ../src/js/translateCallbak/index.js
 
 
 /* harmony default export */ var translateCallbak = ({
-    youdao: translateCallbak_youdao
+    youdao: translateCallbak_youdao,
+    baidu: translateCallbak_baidu
 });
 // CONCATENATED MODULE: ./content_script/extension-action.js
 
@@ -2038,7 +2061,6 @@ function youdao_youdao(obj) {
 /* harmony default export */ var extension_action = (initExtensionAction);
 
 function initExtensionAction(appConfig, App_action, config) {
-    let translateProvider = config.translateProvider;
     //选取事件的回调函数:
     const originHandler = function () {
         //先判断app是否已被用户通过dom按钮关闭:
@@ -2046,7 +2068,13 @@ function initExtensionAction(appConfig, App_action, config) {
         let current_word = config.current_word;
         var new_word = window.getSelection().toString();
         if (current_word === new_word || !/[A-z]+|\S/g.test(new_word) || new_word.length > appConfig.max_select_len) return; //过滤无效选取
-        if (/[\u4E00-\u9FEF]/g.test(new_word)) return App_action.setWiki(new_word);//汉字不翻译 直接wiki
+        if (/[\u4E00-\u9FEF]/g.test(new_word)) {
+            if(new_word.length<=8){
+                return App_action.setWiki(new_word);//汉字不翻译 直接wiki
+            }else{
+                return;
+            }
+        }
         config.current_word = new_word;//记录去重
         handleWord(new_word);
     }
@@ -2055,13 +2083,14 @@ function initExtensionAction(appConfig, App_action, config) {
     //准备app的dom模板:
     function prepareAppDom() { 
         var { container, style, app, options, msgContainer,script,settingStyle } = appConfig;
-        const parsedOptions = `<a href="javascript:;" title='关闭' 
+        const parsedOptions =
+       `<a href="javascript:;" title='关闭' 
         style='background-image:url(${appConfig.icons.close})'
         id="doc_assistant_close" class="doc_assistant_option"></a>
-        <a href="javascript:;" title='最小化' 
+        <a href="javascript:;" title='隐藏' 
         style='background-image:url(${appConfig.icons.minify})'
         id="doc_assistant_minify" class="doc_assistant_option"></a>
-        <a href="javascript:;" title='展开' 
+        <a href="javascript:;" title='保持显示' 
         style='background-image:url(${appConfig.icons.maxfy})'
         id="doc_assistant_maxfy" class="doc_assistant_option"></a>`;
 
@@ -2074,7 +2103,6 @@ function initExtensionAction(appConfig, App_action, config) {
         script.setAttribute('id', appConfig.scriptId);//script
         settingStyle.setAttribute('id',appConfig.settingStyleId)
 
-        app.setAttribute('draggable', 'true');
         app.setAttribute('style','--top:100px;--left:20px');
         options.innerHTML = parsedOptions;
         appendStyleLink(style); //插入link 
@@ -2088,6 +2116,8 @@ function initExtensionAction(appConfig, App_action, config) {
         app.appendChild(msgContainer);
         document.body.appendChild(app);
         appendScript(script);//插入脚本
+
+        watchMouseOver(options,app);//监听悬浮事件 添加draggable
     }
     function insertSettingStyle(){
         appConfig.settingStyle.innerHTML=`#doc_assistant_darth_vade{${appConfig.settingCssText}}`;
@@ -2101,7 +2131,15 @@ function initExtensionAction(appConfig, App_action, config) {
         style.setAttribute('href', appConfig.cssSrc);
         document.head.appendChild(style);
     }
-
+    //监听鼠标悬浮事件
+    function watchMouseOver(options,app){
+        options.addEventListener('mouseenter',e=>{
+            app.setAttribute('draggable', 'true');
+        });
+        options.addEventListener('mouseleave',e=>{
+            app.removeAttribute('draggable');
+        });
+    }
     //监听选取事件 
     function startWatch() {
         document.addEventListener('selectionchange', selectionEventHandler);//监听
@@ -2110,24 +2148,25 @@ function initExtensionAction(appConfig, App_action, config) {
     function stopWatch() {
         document.removeEventListener('selectionchange',config.selectionEventHandler);
         App_action.stopWatchOptionClick();
+        App_action.stopWatchClickOutside();
     }
 
     //翻译
     function translate(word) {
         App_action.loading()
-        return open_api[translateProvider](word);
+        return open_api[config.translateProvider](word);
     }
 
     //展示翻译结果
     function appendResult(res) {
         App_action.setState('max')
-        let parsedHTML = translateCallbak[translateProvider](res);//根据翻译源选择回调函数
+        let parsedHTML = translateCallbak[config.translateProvider](res);//根据翻译源选择回调函数
         App_action.setContent(parsedHTML);
     }
 
     //处理单词：
     function handleWord(word) {
-        translate(word).then(res => {
+        translate(word).then((res) => {
             appendResult(res)
         }).catch(err => {
             console.error(err)
@@ -2165,20 +2204,48 @@ const app_action_wikiUrl = {
 };
 /* harmony default export */ var app_action = (initAppAction);
 
-function initAppAction (appConfig) {
+function initAppAction (appConfig,context,config) {
     let { app, container } = appConfig;
-    
     const optionClickHandler=function (e) {
-        if (e.target.id === 'doc_assistant_close') setState('closed')
-        if (e.target.id === 'doc_assistant_minify') setState('mini')
-        if (e.target.id === 'doc_assistant_maxfy') setState('max')
+        if (e.target.id === 'doc_assistant_close') {
+            showToast('可在右上角重新打开');
+            setTimeout(() => {
+                setState('closed')
+            }, 800);
+        }
+        if (e.target.id === 'doc_assistant_minify') {
+            setState('mini');
+            watchClickOutside();
+        }
+        if (e.target.id === 'doc_assistant_maxfy') {
+            setState('max');
+            stopWatchClickOutside();
+        }
+        if (e.target.id === 'doc_assistant_setting') context.runtime.openOptionsPage();//45以下版本不支持
     }
+
+    const clickOutSideHandler=e=>{
+        let target=e.target;
+        let isClickIn=false;
+        while(target){
+            if(target===document.documentElement) break;
+            if(target.getAttribute('id')==='doc_assistant_darth_vade'){
+             isClickIn=true;
+                break;
+            };
+            target=target.parentNode;
+        };
+        if(!isClickIn) minify()
+     };
     
     function setContent(parsedHTML) {
         container.innerHTML = parsedHTML;
     }
     function setState(state) {
-        app.dataset.state = state;
+        if(state==='closed'){
+            shutDownApp();
+        }
+        app.dataset.state = state;//app是node节点
         appConfig.app_state = state;
     }
     //展示信息
@@ -2190,7 +2257,11 @@ function initAppAction (appConfig) {
             appConfig.msgContainer.innerHTML='';
         }, duration);
     }
-
+    function shutDownApp(){
+        document.removeEventListener('selectionchange',config.selectionEventHandler);
+        stopWatchOptionClick();
+        stopWatchClickOutside();
+    }
     function minify() {
         setState('mini');
     };
@@ -2219,19 +2290,10 @@ function initAppAction (appConfig) {
         document.getElementById('doc_assistant_darth_vade').removeEventListener('click',optionClickHandler);
     }
     function watchClickOutside(){
-        document.addEventListener('click',e=>{
-           let target=e.target;
-           let isClickIn=false;
-           while(target){
-               if(target===document.documentElement) break;
-               if(target.getAttribute('id')==='doc_assistant_darth_vade'){
-                isClickIn=true;
-                   break;
-               };
-               target=target.parentNode;
-           };
-           if(!isClickIn) minify()
-        })
+        document.addEventListener('click',clickOutSideHandler)
+    }
+    function stopWatchClickOutside(){
+        document.removeEventListener('click',clickOutSideHandler)
     }
     function watchAppDrag(){
         let x,y,startx,starty;
@@ -2269,13 +2331,14 @@ function initAppAction (appConfig) {
         showToast,
         hideLoading,
         watchClickOutside,
+        stopWatchClickOutside,
         watchAppDrag,
         enableResize
     };
 }
 
-// EXTERNAL MODULE: ../src/js/runtime/storage.js
-var runtime_storage = __webpack_require__(0);
+// EXTERNAL MODULE: ../src/js/extension-api/storage.js
+var extension_api_storage = __webpack_require__(0);
 
 // EXTERNAL MODULE: ../src/js/utils/createCssBySettings.js
 var createCssBySettings = __webpack_require__(1);
@@ -2290,7 +2353,6 @@ var init_settings = __webpack_require__(2);
 
 
 let context, runtime;
-
 try {
     runtime = browser.runtime;
     context = browser;
@@ -2301,14 +2363,15 @@ try {
 
 /*初始化配置 */
 const content_script_config = {
-    translateProvider: 'youdao',
+    translateProvider: 'youdao', //支持有道 百度 
     current_word: null,
     App_action:null,
     Extension_action:null,
     web_accessible_resources: {
-        maxfy: "src/img/maxfy.svg",
-        minify: "src/img/minify.svg",
-        close: "src/img/close.svg",
+        maxfy: "dist/img/keep.svg",
+        minify: "dist/img/minify.svg",
+        close: "dist/img/close.svg",
+        setting: "dist/img/setting.svg",
         css: "dist/dom.css",
         script: "dist/dom.js"
     }
@@ -2334,7 +2397,8 @@ const content_script_appConfig = {
     icons: {
         minify: runtime.getURL(content_script_config.web_accessible_resources.minify),
         maxfy: runtime.getURL(content_script_config.web_accessible_resources.maxfy),
-        close: runtime.getURL(content_script_config.web_accessible_resources.close)
+        close: runtime.getURL(content_script_config.web_accessible_resources.close),
+        setting:runtime.getURL(content_script_config.web_accessible_resources.setting)
     },
     app_state: 'empty', //mini closed max empty
 };
@@ -2345,7 +2409,7 @@ const content_script_appConfig = {
 /*初始化配置 */
 
 //初始化:
-runtime_storage["a" /* default */].get('settings').then(res=>{
+extension_api_storage["a" /* default */].get('settings').then(res=>{
     // console.log('初始化',res)
     let setting_json;
     let settings=res.settings;
@@ -2356,7 +2420,7 @@ runtime_storage["a" /* default */].get('settings').then(res=>{
         setting_json=init_settings["a" /* default */];//使用默认配置
     }
     content_script_appConfig.settingCssText=Object(createCssBySettings["a" /* default */])(setting_json);
-    getAndSetMaxLenBySettings(setting_json);
+    setConfig(setting_json);
     init();
 })
 
@@ -2366,7 +2430,7 @@ function init() {
     /*防止重复实例化*/
     window.hasRun = true;
     /*防止重复实例化*/
-    const App_action = app_action(content_script_appConfig);
+    const App_action = app_action(content_script_appConfig,context,content_script_config);
     content_script_config.App_action=App_action;
     const Extension_action = extension_action(content_script_appConfig, App_action, content_script_config);
     content_script_config.Extension_action=Extension_action;
@@ -2383,28 +2447,29 @@ function init() {
 context.runtime.onMessage.addListener((message, sender, sendback) => {
     //来自popup的事件
     // console.log(message)
-    sendback('hi')
+    if(message.action==='open'){
+        content_script_config.App_action.showToast('文档助手已启动',1200);
+        content_script_config.App_action.setState('max');
+    }
+    sendback('已启动');
 })
 
 const handleStorageChange=(storage)=>{
     let {settings}=storage;
     settings=settings.newValue || settings.oldValue ||settings;
-    // console.log('修改设置',storage)
+    let settingObj=JSON.parse(settings);
+    // console.log('修改设置',settingObj);
     content_script_appConfig.settingCssText=Object(createCssBySettings["a" /* default */])(settings);
     content_script_config.Extension_action.insertSettingStyle();
-    getAndSetMaxLenBySettings(settings);
+    setConfig(settingObj);
     content_script_config.App_action.showToast('设置已生效',3000);
   }
 //设置更新:
 context.storage.onChanged.addListener(handleStorageChange);
 
-function getAndSetMaxLenBySettings(settings){
-    if(typeof settings === 'object') {
-        content_script_appConfig.max_select_len=settings.max_word_len-0;
-    }else{
-        /"max_word_len":"(\d+)"/.test(settings);
-        content_script_appConfig.max_select_len=RegExp.$1-0;//从json中提取max_len
-    }
+function setConfig(obj){
+    content_script_appConfig.max_select_len=obj.max_word_len-0;
+    content_script_config.translateProvider=obj.provider;
 }
 
 /***/ })

@@ -1,6 +1,6 @@
 function createCssBySettings(settings){
     if(typeof settings === 'string') settings=JSON.parse(settings);
-    settings.hover_bg_color = settings.bg_color.replace(/(1\))$/, 0.9 + ')');
+    settings.hover_bg_color = settings.bg_color.replace(/([0]|[0]\.\d|[1])\)$/, 0.9 + ')');
     settings.bg_color = settings.bg_color.replace(/(1\))$/, settings.opacity + ')');
     settings.color = settings.color.replace(/1\)$/, settings.font_opacity + ')');
     settings.is_high_light = settings.is_high_light ? '500' : '400';

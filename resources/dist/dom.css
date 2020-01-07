@@ -9,12 +9,13 @@
   max-width: var(--max_width);
 }
 #doc_assistant_darth_vade:hover {
-  background: var(--hover_bg_color);
+  background: var(--hover_bg_color) !important;
 }
 .doc-assistant-translate-detail {
   display: var(--result);
 }
 #doc_assistant_darth_vade {
+  text-align: left;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, segoe ui, Roboto, Helvetica, Arial, sans-serif, apple color emoji, segoe ui emoji, segoe ui symbol;
   word-break: break-all;
   -webkit-transition: opacity, -webkit-transform 0.5s;
@@ -30,11 +31,14 @@
   left: var(--left);
   border-radius: 8px;
   line-height: 1.2;
+  -webkit-transition: opacity 0.5s;
+  transition: opacity 0.5s;
 }
 #doc_assistant_darth_vade:hover #doc_assistant_options {
-  opacity: 1;
+  opacity: 1 !important;
 }
 #doc_assistant_darth_vade #doc_assistant_container {
+  cursor: text;
   display: -webkit-box;
   display: flex;
   -webkit-transition: all 0.2s;
@@ -60,13 +64,13 @@
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
-  color: var(--color) !important;
-  font-size: 0.8em !important;
+  color: var(--color);
+  font-size: 0.8em;
   text-decoration: underline;
   cursor: pointer;
 }
 #doc_assistant_darth_vade .doc-assistant-wiki:hover {
-  color: #39c !important;
+  color: #39c;
 }
 #doc_assistant_darth_vade .doc-assistant-wiki:hover::after {
   opacity: 1;
@@ -76,7 +80,7 @@
   -webkit-transition: all 0.4s;
   transition: all 0.4s;
   content: ' 试试手气?';
-  color: var(--color) !important;
+  color: var(--color);
 }
 #doc_assistant_darth_vade #doc_assistant_options {
   cursor: move;
@@ -125,8 +129,6 @@
   margin: auto;
 }
 #doc_assistant_darth_vade[data-state=mini] {
-  width: 40px;
-  height: 40px;
   opacity: 0 !important;
 }
 #doc_assistant_darth_vade[data-state=mini]:hover {
@@ -138,10 +140,6 @@
 }
 #doc_assistant_darth_vade[data-state=mini] #doc_assistant_minify {
   display: none;
-}
-#doc_assistant_darth_vade[data-state=mini] > #doc_assistant_container {
-  -webkit-transform: scale3d(0, 0, 1);
-          transform: scale3d(0, 0, 1);
 }
 #doc_assistant_darth_vade[data-state=mini]::after {
   content: '';
@@ -182,6 +180,9 @@
 #doc_assistant_darth_vade[data-state=empty] {
   opacity: 0;
 }
+#doc_assistant_darth_vade[data-state=empty]:hover {
+  opacity: 1 !important;
+}
 @-webkit-keyframes rotate {
   to {
     -webkit-transform: rotate(1080deg);
@@ -213,5 +214,15 @@
     -webkit-clip-path: circle(0% at 100% 0);
             clip-path: circle(0% at 100% 0);
   }
+}
+
+#doc_assistant_darth_vade a,
+#doc_assistant_darth_vade a:visited,
+#doc_assistant_darth_vade a:link,
+#doc_assistant_darth_vade a:active,
+#doc_assistant_darth_vade div,
+#doc_assistant_darth_vade nav,
+#doc_assistant_darth_vade span {
+  border: none;
 }
 

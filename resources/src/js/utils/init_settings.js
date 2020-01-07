@@ -9,5 +9,6 @@ export default {
     max_width: "20",
     result: "block",
     wiki:"flex",
-    hover_bg_color: "rgba(0,0,0,0.9)"
+    hover_bg_color: "rgba(0,0,0,0.9)",
+    provider:'youdao'
 }

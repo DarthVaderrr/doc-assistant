@@ -1,4 +1,4 @@
-import storage from '../../src/js/runtime/storage';
+import storage from '../../src/js/extension-api/storage';
 import createCssBySettings from '../../src/js/utils/createCssBySettings';
 import init_settings from '../../src/js/utils/init_settings'
 let context, runtime, contextName;
@@ -18,18 +18,18 @@ let defaultSettings;
 
 init();
 function init() {
-    storage.get('settings').then(res=>{
-            // console.log(res);
-            let {settings}=res;
-            if (settings) {
-                defaultSettings = JSON.parse(settings.newValue||settings);
-            } else {
-                defaultSettings = { ...config.init_settings };
-            };
-            initDom(defaultSettings)
-        }).catch(err=>{
-            console.error(err)
-        })
+    storage.get('settings').then(res => {
+        // console.log(res);
+        let { settings } = res;
+        if (settings) {
+            defaultSettings = JSON.parse(settings.newValue || settings);
+        } else {
+            defaultSettings = { ...config.init_settings };
+        };
+        initDom(defaultSettings)
+    }).catch(err => {
+        console.error(err)
+    })
 };
 function initDom(settings) {
     document.querySelector('.form').innerHTML = initHtml(settings);
@@ -55,25 +55,19 @@ document.addEventListener('click', e => {
 
 function save(settings) {
     storage.set(
-            { 
-              'settings':JSON.stringify(settings)
-            }).then(res=>{
-                // console.log(settings)
-                // console.log('保存成功')
-            }).catch(err=>{
-                alert('保存失败,sorry~')
-            })
+        {
+            'settings': JSON.stringify(settings)
+        }).then(res => {
+            // console.log(settings)
+            // console.log('保存成功')
+        }).catch(err => {
+            alert('保存失败,sorry~')
+        })
 }
 function reset() {
-    if(contextName==='chrome'){
-        context.storage.local.remove('settings',res=>{
-            init();
-        })
-    }else{
-        context.storage.local.remove('settings').then(res=>{
-            init()
-        })
-    }
+    storage.remove('settings').then(res => {
+        init()
+    })
 }
 function mapSetting() {
     for (let i of document.querySelectorAll('label+*')) {
@@ -105,7 +99,7 @@ function initHtml(settings) {
     <form class="browser-style form column">
     <div>
         <label for="max_word_len">翻译文本长度限制</label>
-        <input id="max_word_len" step="5" value="${settings.max_word_len}" type="number" max="40" placeholder="1~40">
+        <input id="max_word_len" step="5" value="${settings.max_word_len}" type="number" max="100" placeholder="1~100">
     </div>
     <div>
         <label for="font_size">文字大小基准</label>
@@ -138,7 +132,14 @@ function initHtml(settings) {
     <div>
             <label for="font_opacity">字体透明度</label>
             <input type="number" value="${settings.font_opacity}" step="0.1" max="1" placeholder="0~1" id="font_opacity">
-        </div>
+    </div>
+    <div>
+        <label for="provider">选择翻译方式</label>
+        <select name="provider" id="provider">
+            <option value="youdao" ${settings.provider === 'youdao' ? 'selected' : ''}>有道词典</option>
+            <option value="baidu" ${settings.provider === 'baidu' ? 'selected' : ''}>百度翻译</option>
+        </select>
+    </div>
     <div>
         <label for="result">是否显示完整释义</label>
         <select name="result" id="result">

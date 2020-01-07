@@ -1,60 +1,59 @@
-let context,runtime,contextName;
-const chromeName='chrome',firefoxName='firefox';
+import tabs from '../../src/js/extension-api/tabs'
+let context, runtime, contextName;
+const CHROME = 'chrome', FIREFOX = 'firefox';
 try {
   runtime = browser.runtime;
   context = browser;
-  contextName='firefox';
+  contextName = CHROME;
 } catch (err) {
-  runtime=chrome.runtime
+  runtime = chrome.runtime
   context = chrome;
-  contextName='chrome';
+  contextName = FIREFOX;
 };
 
 excuteContentScript();//这个不管用户点不点图标都会执行  然后执行content_scripts 
 
-context.tabs.query({active: true, currentWindow: true}, function(tabs){
-  context.tabs.sendMessage(tabs[0].id, {msg:'hello'}, function(response) {
-      //  console.log(response)
-  });  
-});
 
-context.storage.onChanged.addListener((storage)=>{
+context.storage.onChanged.addListener((storage) => {
   // console.log(storage.userSettingCss)
 });
 
-document.getElementById('open_setting').addEventListener('click',e=>{
-  runtime.openOptionsPage();//打开设置面板
+
+//文档内的点击事件 统一托管:
+document.addEventListener('click', e => {
+  if(e.target.getAttribute('id')==='open_setting') runtime.openOptionsPage();//打开设置面板
+  if(e.target.getAttribute('id')==='reboot') rebootApp();
 })
 
-function sendMsgFirefox(){
-  runtime.sendMessage({
-    msg:'hello'
-  }).then(res=>{
-    console.log(res)
-  })
-}
-function sendMsgChrome(id){
-  runtime.sendMessage({
-    msg:"hello"
-  },res=>{
-    console.log(res)
-  })
+
+function rebootApp(){
+  tabs.query({ active: true, currentWindow: true }).then(
+    function (tabList) {
+      tabs.sendMessage(tabList[0].id, { action: 'open' }).then(response => {
+        //  console.log(response)
+      }).catch(err => {
+        console.error(err)
+      })
+    }).catch(err => {
+      console.error(err)
+    })
 }
 
+
 function excuteContentScript() {
-  try{
+  try {
     _chrome();
-  }catch(err){
+  } catch (err) {
     console.error(err);
     _firefox()
   }
   function _chrome() {
-      context.tabs.executeScript(
-        { file: "/content_scripts/extension.js" },
-        (res)=>{
-          console.log('running in chrome')
-        }
-      )
+    context.tabs.executeScript(
+      { file: "/content_scripts/extension.js" },
+      (res) => {
+        console.log('running in chrome')
+      }
+    )
   };
   function _firefox() {
     context.tabs.executeScript({ file: "/content_scripts/extension.js" })

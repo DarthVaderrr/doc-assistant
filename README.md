@@ -13,7 +13,9 @@
    2. 左侧边栏->此firefox
    3. 临时载入附加组件
    4. 选择manifest.json文件  即可生效
- + 或者去扩展程序商店搜索doc-assistant并免费安装 [火狐浏览器安装地址](https://addons.mozilla.org/zh-CN/firefox/addon/doc-assistant/?src=search)
+ + 或者去扩展程序商店搜索doc-assistant并免费安装 :
+ [火狐浏览器安装地址](https://addons.mozilla.org/zh-CN/firefox/addon/doc-assistant/?src=search)
+ [谷歌浏览器还在审核]
 # 调试和修改
  1. cd到webpack.config.js所在目录
  2. sodu npm install 
@@ -23,8 +25,11 @@
 # 翻译接口说明 如何申请api
  1. 目前使用的是有道词典的接口  新用户送一百元体验金  用完需要充值  接口很稳定  功能齐全
  2. 申请方式: [有道智云](https://ai.youdao.com/index.s) 申请完自行查看接入指南
- 3. 注册后将api需要的字段填到open-api/youdao-pub.js的api对象内
- 4. 百度提供免费的接口 但是有频率限制,有兴趣的旁友可以尝试: [百度翻译](https://api.fanyi.baidu.com/api/trans/product/index)  此项目目录下的open-api/baidu-pub.js封装好了百度api的使用方法 自己填写id和key即可 
+ 3. 注册后将api需要的字段填到open-api/youdao-pub.js的api对象内  
+ 并在open-api/index.js中将 import youdao from './youdao.js' 改成 import youdao from './youdao-pub.js'
+ 4. 百度提供免费的接口 但是有频率限制,有兴趣的旁友可以尝试: [百度翻译](https://api.fanyi.baidu.com/api/trans/product/index)  
+ 此项目目录下的open-api/baidu-pub.js封装好了百度api的使用方法 自己填写id和key即可  
+ 如果要改用百度接口 请把 content_script/index.js 中 config.translateProvider 的值改成 'baidu' 便会自动采用百度接口处理
 
 # 目录结构
  + node_modules  
@@ -60,22 +65,22 @@
        - layout.css ------基础通用布局样式  
     - img  -------用到的图标  
     - js -------主要业务逻辑代码  
-       - runtime  -------兼容chrome和firefox的extension_api封装  
-       - index.js  ------api出口  
-       - storage.js  --------本地存储api封装
-    - open-api -------翻译接口api封装  
-       - index.js  -------api出口  
-       - youdao.js    -------有道翻译api封装  
-    - translateCallback   ------- 翻译接口的回调函数
-       - youdao.js   -------有道词典接口的回调函数  
-       - index.js --------回调函数出口
-    - utils  ------- 一些用到的项目js模块
-       - createCssBySetting.js  -------将偏好设置json映射成css  
-       - function-extend.js    ------- 节流与防抖函数  
-       - http.js   -------- 发送请求的函数  
-       - init_setting.js    --------存放默认设置的对象  
-       - jsonp.js    ------- 针对有道词典封装的特殊的jsonp函数    
-       - sha256.js   ------- 调翻译接口需要的哈希算法
+       - extension-api  -------兼容chrome和firefox的extension_api封装  
+         - index.js  ------api出口  
+         - storage.js  --------本地存储api封装
+      - open-api -------翻译接口api封装  
+         - index.js  -------api出口  
+         - youdao.js    -------有道翻译api封装  
+      - translateCallback   ------- 翻译接口的回调函数
+         - youdao.js   -------有道词典接口的回调函数  
+         - index.js --------回调函数出口
+      - utils  ------- 一些用到的项目js模块
+         - createCssBySetting.js  -------将偏好设置json映射成css  
+         - function-extend.js    ------- 节流与防抖函数  
+         - http.js   -------- 发送请求的函数  
+         - init_setting.js    --------存放默认设置的对象  
+         - jsonp.js    ------- 针对有道词典封装的特殊的jsonp函数    
+         - sha256.js   ------- 调翻译接口需要的哈希算法
  + package.lock.json
  + package.json
  + postcss.config.js
@@ -83,7 +88,10 @@
  + webpack.config.js
 
 # TODO
- 1. 跨浏览器 [未完成]
- 2. 稳定免费接口 [未完成]
- 3. 支持用户偏好设置 : 颜色  位置  大小  显示内容 [完成]
- 4. 实现对浏览器dom以外的支持  包括dev-tool 标题栏  剪切板等 [未完成]
+[x] 跨浏览器  
+[x] 稳定免费接口 暂时使用有道的接口  仅支持jsonp请求  百度的接口不稳定
+[o] 支持用户偏好设置 : 颜色  位置  大小  显示内容   
+[x] 实现对浏览器dom以外的支持  包括dev-tool 标题栏  剪切板等  
+[x] css-normalize  某些样式会被页面的样式覆盖  
+[o] 乱码问题  
+[x] 内容安全策略限制  在摆脱jsonp之前  无法解决  app在某些限制严格的网站无法正常工作
