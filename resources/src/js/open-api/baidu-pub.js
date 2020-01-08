@@ -1,12 +1,15 @@
-import http from '../utils/http';
+import jsonp from '../utils/jsonp'
 import MD5 from 'js-md5'
-//这接口极度不稳定 常常返回空字符
-const api={
-    appId:'************',
-    psd:'***************',
-    url:'https://api.fanyi.baidu.com/api/trans/vip/translate'
+const api = {
+    appId: 'xxxxxx',
+    psd: 'xxxxx',
+    url: 'https://api.fanyi.baidu.com/api/trans/vip/translate'
 };
-function baidu(word,from='en',to='zh') {
+
+function baidu(word, from = 'en', to = 'zh') {
+    let random = ~~(Math.random() * 1000);
+    let reqName = 'someReqName' + random;
+    return new Promise((resolve,reject)=>{
     var appid = api.appId;
     var key = api.psd;
     var salt = (new Date).getTime();
@@ -22,7 +25,22 @@ function baidu(word,from='en',to='zh') {
         to,
         sign: sign
     };
-    let url=api.url;
-   return http(url, 'get', data);
+    return jsonp({
+        url: api.url,
+        data,
+        reqName,
+        random,
+        success(res) {
+            res.originWordDarthVade=word;
+            document.getElementById(reqName).remove()
+            resolve(res);
+        },
+        fail(err) {
+            res.originWordDarthVade=word;
+            document.getElementById(reqName).remove()
+            reject(err);
+        }
+    });
+})
 }
 export default baidu;

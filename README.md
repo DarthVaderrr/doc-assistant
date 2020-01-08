@@ -22,14 +22,14 @@
  3. npm run build
  4. 回到添加插件的地方  点击重载按钮
  5. 调试前请自行准备好api接口所需的appid和key 
-# 翻译接口说明 如何申请api
- 1. 目前使用的是有道词典的接口  新用户送一百元体验金  用完需要充值  接口很稳定  功能齐全
- 2. 申请方式: [有道智云](https://ai.youdao.com/index.s) 申请完自行查看接入指南
+## 翻译接口说明 如何申请api
+ 1. 目前使用的是有道词典的接口  新用户送一百元体验金  用完需要充值  接口很稳定  功能齐全  但是只支持jsonp
+ 2. 有道云申请方式: [有道智云](https://ai.youdao.com/index.s) 申请完自行查看接入指南
  3. 注册后将api需要的字段填到open-api/youdao-pub.js的api对象内  
  并在open-api/index.js中将 import youdao from './youdao.js' 改成 import youdao from './youdao-pub.js'
- 4. 百度提供免费的接口 但是有频率限制,有兴趣的旁友可以尝试: [百度翻译](https://api.fanyi.baidu.com/api/trans/product/index)  
+ 4. 百度提供免费的接口 但是有频率限制,只支持jsonp,有兴趣的旁友可以尝试: [百度翻译](https://api.fanyi.baidu.com/api/trans/product/index)  
  此项目目录下的open-api/baidu-pub.js封装好了百度api的使用方法 自己填写id和key即可  
- 如果要改用百度接口 请把 content_script/index.js 中 config.translateProvider 的值改成 'baidu' 便会自动采用百度接口处理
+ 5. yeekit  [译云](http://api.yeekit.com/mannual.php)  免费 支持ajax  频率限制 每小时1000积分 每次调用扣一定的积分  一小时内扣完1000则暂停服务一小时 
 
 # 目录结构
  + node_modules  
@@ -81,6 +81,7 @@
          - init_setting.js    --------存放默认设置的对象  
          - jsonp.js    ------- 封装的jsonp函数    
          - sha256.js   ------- 调翻译接口需要的哈希算法
+         - init_settings.js  -------app的默认配置,样式 翻译接口选择等配置
  + package.lock.json
  + package.json
  + postcss.config.js
@@ -88,10 +89,9 @@
  + webpack.config.js
 
 ## TODO
-- [ ] 跨浏览器  
-- [ ] 稳定免费接口 暂时使用有道/百度的接口  仅支持jsonp请求  
+- [ ] 跨浏览器  目前仅在谷歌 火狐测试过
+- [ ] 稳定免费接口 
 - [x] 支持用户偏好设置 : 颜色  位置  大小  显示内容   
 - [ ] 实现对浏览器dom以外的支持  包括dev-tool 标题栏  剪切板等  
 - [ ] css-normalize  某些样式会被页面的样式覆盖  
 - [x] 乱码问题  
-- [ ] 内容安全策略限制  在摆脱jsonp之前  无法解决  app在某些限制严格的网站无法正常工作

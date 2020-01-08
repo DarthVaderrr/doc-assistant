@@ -138,6 +138,7 @@ function initHtml(settings) {
         <select name="provider" id="provider">
             <option value="youdao" ${settings.provider === 'youdao' ? 'selected' : ''}>有道词典</option>
             <option value="baidu" ${settings.provider === 'baidu' ? 'selected' : ''}>百度翻译</option>
+            <option value="yeekit" ${settings.provider === 'yeekit' ? 'selected' : ''}>译云翻译</option>
         </select>
     </div>
     <div>

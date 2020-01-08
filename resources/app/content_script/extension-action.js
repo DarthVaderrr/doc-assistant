@@ -20,6 +20,7 @@ function initExtensionAction(appConfig, App_action, config) {
             }
         }
         config.current_word = new_word;//记录去重
+        document.currentWord=config.current_word;//全局记录
         handleWord(new_word);
     }
     const selectionEventHandler = debounce(originHandler, 300, false);//防抖
@@ -84,15 +85,20 @@ function initExtensionAction(appConfig, App_action, config) {
             app.removeAttribute('draggable');
         });
     }
-    //监听选取事件 
+    //监听app事件 
     function startWatch() {
-        document.addEventListener('selectionchange', selectionEventHandler);//监听
+        document.addEventListener('selectionchange', selectionEventHandler);//监听选取
+        App_action.watchOptionClick();//监听选项栏
+        App_action.watchAppDrag();//监听拖动
+        // App_action.watchClickOutside();//监听外部点击 这个用不上了
+
     }
-    //停止监听
+    //停止监听app事件
     function stopWatch() {
         document.removeEventListener('selectionchange',config.selectionEventHandler);
         App_action.stopWatchOptionClick();
-        App_action.stopWatchClickOutside();
+        // App_action.stopWatchClickOutside();
+        App_action.stopWatchDrag();
     }
 
     //翻译
@@ -124,9 +130,8 @@ function initExtensionAction(appConfig, App_action, config) {
     }
     function rebootApp() {
         App_action.setState('max');
-        App_action.showToast('翻译已启用');
+        App_action.showToast('文档助手已启用',2000);
         startWatch();
-        App_action.watchOptionClick();
     }
 
     return {

@@ -1,8 +1,11 @@
 node_modules
 publish
+test
 resources/src/js/open-api/baidu.js
 resources/src/js/open-api/youdao.js
 resources/src/js/open-api/tmxmall.js
 resources/src/js/open-api/bing.js
 resources/src/js/open-api/jinshan.js
 resources/src/js/open-api/google.js
+resources/src/js/open-api/yeekit.js
+resources/dist/content_script.js

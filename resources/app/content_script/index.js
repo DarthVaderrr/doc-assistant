@@ -14,7 +14,7 @@ try {
 
 /*初始化配置 */
 const config = {
-    translateProvider: 'youdao', //支持有道 百度 
+    translateProvider: null, //在init_settings.js中指定默认值
     current_word: null,
     App_action:null,
     Extension_action:null,
@@ -85,12 +85,8 @@ function init() {
     config.App_action=App_action;
     const Extension_action = initExtensionAction(appConfig, App_action, config);
     config.Extension_action=Extension_action;
-
     Extension_action.prepareAppDom();//插入app需要的元素
-    Extension_action.startWatch();//开始监听选取
-    App_action.watchOptionClick();//监听菜单
-    App_action.watchClickOutside();//监听app外点击
-    App_action.watchAppDrag();//监听拖拽
+    Extension_action.rebootApp();//启动app
 
 }
 /*初始化 */
@@ -99,8 +95,7 @@ context.runtime.onMessage.addListener((message, sender, sendback) => {
     //来自popup的事件
     // console.log(message)
     if(message.action==='open'){
-        config.App_action.showToast('文档助手已启动',1200);
-        config.App_action.setState('max');
+        config.Extension_action.rebootApp()
     }
     sendback('已启动');
 })

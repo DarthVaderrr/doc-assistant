@@ -4,6 +4,7 @@
     "version": "1.1",
     "author":"DarthVaderrr",
     "description": "文档快速翻译生词，一键直达百科词条",
+    "update_url": "http://upext.chrome.360.cn/intf.php?method=ExtUpdate.query",
     "icons": {
       "32": "dist/img/icon-32.png",
       "48": "dist/img/icon-48.png",

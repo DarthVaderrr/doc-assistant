@@ -116,6 +116,10 @@ function initAppAction (appConfig,context,config) {
         });
     }
 
+    function stopWatchDrag(){
+        //停止监听拖动
+    }
+
     function enableResize(){
             //允许用户缩放
     }
@@ -133,6 +137,7 @@ function initAppAction (appConfig,context,config) {
         watchClickOutside,
         stopWatchClickOutside,
         watchAppDrag,
+        stopWatchDrag,
         enableResize
     };
 }
