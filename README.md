@@ -1,7 +1,29 @@
+*技术类文档语法一般会尽量简单，但是难免碰到很多不熟悉或根本不认识的单词，切出去找翻译又嫌麻烦，正好，这里有一款浏览器插件可以帮你快速地提供释义，让你读文档纵享丝滑*
+
+**单词翻译：**
+![单词翻译](https://user-gold-cdn.xitu.io/2020/1/8/16f84c00fe438719?w=2340&h=1342&f=gif&s=868495)
+**整句翻译(图片过大减帧，实际上翻译速度和单词一样)：**
+
+
+![整句翻译(图片过大减帧，实际上翻译速度和单词一样)](https://user-gold-cdn.xitu.io/2020/1/8/16f84db419d9bf97?w=2340&h=1342&f=gif&s=3234498)
 # Doc-assistant
- + 浏览器英文文档阅读辅助插件
- + 仅支持英译中
-# 本地加载方式
+ + 仓库地址： [github](https://github.com/DarthVaderrr/doc-assistant)
+ + 浏览器环境下的英文文档阅读辅助插件
+ + 支持单词快速翻译，整句翻译，特殊词汇百科词条链接
+ + 可以去扩展程序商店搜索doc-assistant并免费安装 :
+ [火狐浏览器安装地址](https://addons.mozilla.org/zh-CN/firefox/addon/doc-assistant/?src=search)  
+ [谷歌浏览器还在审核]
+ + 这款插件本是为我自己量身定做的，但是考虑到可能有很多和我情况类似的同学也许用得上，所以安排了上架和开源。想直接用可以到浏览器商店安装，如果想按自己的需求修改插件功能可以看下面的步骤：
+
+## 本地加载方式
+ + git clone https://github.com/DarthVaderrr/doc-assistant.git
+ + npm install
+ + 打开src/open-api/index.js 做如下修改：
+    - import baidu from './baidu.js' 改成 import baidu from './baidu-pub.js'
+    - import baidu from './yeekit.js' 改成 import baidu from './yeekit-pub.js'
+    - import baidu from './youdao.js' 改成 import baidu from './youdao-pub.js'
+ + 申请 [有道智云](https://ai.youdao.com/index.s) api账号  将获得的appid和密码填入 youdao-pub.js的api字段内
+ + npm run build
  + 谷歌浏览器  
    1. 依次点击三个点->更多工具->扩展程序
    2. 打开右上角开发者模式
@@ -13,23 +35,21 @@
    2. 左侧边栏->此firefox
    3. 临时载入附加组件
    4. 选择manifest.json文件  即可生效
- + 或者去扩展程序商店搜索doc-assistant并免费安装 :
- [火狐浏览器安装地址](https://addons.mozilla.org/zh-CN/firefox/addon/doc-assistant/?src=search)
- [谷歌浏览器还在审核]
 # 调试和修改
- 1. cd到webpack.config.js所在目录
- 2. sodu npm install 
- 3. npm run build
- 4. 回到添加插件的地方  点击重载按钮
- 5. 调试前请自行准备好api接口所需的appid和key 
+ 1. app样式修改: resources/app/front-dom/dom.less
+ 2. 默认翻译接口修改：resources/src/js/utils/init_settings.js
+ 3. app行为调整：resources/app/content_script/
+ 4. npm run build
+ 5. 回到添加插件的地方  点击重载按钮
+ 6. 调试前请自行准备好api接口所需的appid和key 
+ 7. 已经写好了有道 百度 和译云的接口调用模块  只需要自己申请账号填入即可
+ 
 ## 翻译接口说明 如何申请api
- 1. 目前使用的是有道词典的接口  新用户送一百元体验金  用完需要充值  接口很稳定  功能齐全  但是只支持jsonp
- 2. 有道云申请方式: [有道智云](https://ai.youdao.com/index.s) 申请完自行查看接入指南
- 3. 注册后将api需要的字段填到open-api/youdao-pub.js的api对象内  
- 并在open-api/index.js中将 import youdao from './youdao.js' 改成 import youdao from './youdao-pub.js'
- 4. 百度提供免费的接口 但是有频率限制,只支持jsonp,有兴趣的旁友可以尝试: [百度翻译](https://api.fanyi.baidu.com/api/trans/product/index)  
- 此项目目录下的open-api/baidu-pub.js封装好了百度api的使用方法 自己填写id和key即可  
- 5. yeekit  [译云](http://api.yeekit.com/mannual.php)  免费 支持ajax  频率限制 每小时1000积分 每次调用扣一定的积分  一小时内扣完1000则暂停服务一小时 
+|接口名称|申请地址|调用限制|备注|
+|:-|:-:|-:|-:|
+|有道|[有道智云](https://ai.youdao.com/index.s)|按字计费,注册送一百元体验金|仅支持jsonp|
+|百度|[百度翻译](https://api.fanyi.baidu.com/api/trans/product/index)|每月送两百万字,每秒限十字|仅支持jsonp|
+|译云|[译云](http://api.yeekit.com/mannual.php)|免费,每小时1000积分,扣完暂停一小时|支持ajax|
 
 # 目录结构
  + node_modules  

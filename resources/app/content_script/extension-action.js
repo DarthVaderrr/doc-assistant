@@ -129,8 +129,10 @@ function initExtensionAction(appConfig, App_action, config) {
         App_action.setState('closed');
     }
     function rebootApp() {
-        App_action.setState('max');
-        App_action.showToast('文档助手已启用',2000);
+        App_action.showToast('文档助手已启用',1000);
+        setTimeout(() => {
+            App_action.setState('mini');
+        }, 1000);
         startWatch();
     }
 
