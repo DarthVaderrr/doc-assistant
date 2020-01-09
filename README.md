@@ -1,11 +1,10 @@
 *技术类文档语法一般会尽量简单，但是难免碰到很多不熟悉或根本不认识的单词，切出去找翻译又嫌麻烦，正好，这里有一款浏览器插件可以帮你快速地提供释义，让你读文档纵享丝滑*
 
 **单词翻译：**
-![单词翻译](https://user-gold-cdn.xitu.io/2020/1/8/16f84c00fe438719?w=2340&h=1342&f=gif&s=868495)
+![单词翻译](./git-img/single.gif)
+
 **整句翻译(图片过大减帧，实际上翻译速度和单词一样)：**
-
-
-![整句翻译(图片过大减帧，实际上翻译速度和单词一样)](https://user-gold-cdn.xitu.io/2020/1/8/16f84db419d9bf97?w=2340&h=1342&f=gif&s=3234498)
+![整句翻译](./git-img/int.gif)
 # Doc-assistant
  + 仓库地址： [github](https://github.com/DarthVaderrr/doc-assistant)
  + 浏览器环境下的英文文档阅读辅助插件
