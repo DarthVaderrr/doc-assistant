@@ -163,7 +163,7 @@ try {
   popup_contextName = popup_FIREFOX;
 };
 
-excuteContentScript();//这个不管用户点不点图标都会执行  然后执行content_scripts 
+excuteContentScript();
 
 
 popup_context.storage.onChanged.addListener((storage) => {

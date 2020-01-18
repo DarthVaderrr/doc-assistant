@@ -14,6 +14,7 @@ try {
 
 /*初始化配置 */
 const config = {
+    IGNORELIST:null,
     translateProvider: null, //在init_settings.js中指定默认值
     current_word: null,
     App_action:null,
@@ -78,6 +79,7 @@ storage.get('settings').then(res=>{
 /*初始化 */
 function init() {
     if (window.hasRun) return false;//防止重复实例
+    if(config.IGNORELIST.includes(window.location.hostname)) return false; //过滤名单
     /*防止重复实例化*/
     window.hasRun = true;
     /*防止重复实例化*/
@@ -116,4 +118,5 @@ context.storage.onChanged.addListener(handleStorageChange);
 function setConfig(obj){
     appConfig.max_select_len=obj.max_word_len-0;
     config.translateProvider=obj.provider;
+    config.IGNORELIST=obj.ignoreList;
 }

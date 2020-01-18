@@ -10,5 +10,6 @@ export default {
     result: "block",
     wiki:"flex",
     hover_bg_color: "rgba(0,0,0,0.9)",
-    provider:'youdao'
+    provider:'youdao',
+    ignoreList:['localhost','127.0.0.1']
 }

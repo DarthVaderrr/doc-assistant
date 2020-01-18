@@ -2,6 +2,23 @@
 html{
   width:100vw;
 }
+.btn-s{
+  margin-left: 1em;
+  cursor: pointer;
+  display: flex;
+  border-radius: 4px;
+  padding: 2px;
+}
+.btn-s:hover{
+  background-color: #39c;
+}
+.column{
+  display: flex;
+  flex-direction: column;
+}
+.disable-item{
+  display: flex;
+}
 .btn{
   display: inline-block;
   padding: 0.5em 1em;

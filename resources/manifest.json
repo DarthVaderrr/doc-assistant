@@ -1,15 +1,14 @@
 {
     "manifest_version": 2,
     "name": "doc-assistant",
-    "version": "1.1",
+    "version": "1.2",
     "author":"DarthVaderrr",
     "description": "文档快速翻译生词，一键直达百科词条",
-    "update_url": "http://upext.chrome.360.cn/intf.php?method=ExtUpdate.query",
     "icons": {
       "32": "dist/img/icon-32.png",
       "48": "dist/img/icon-48.png",
       "64": "dist/img/icon-64.png",
-      "96": "dist/img/icon.svg",
+      "96": "dist/img/icon-96.png",
       "128": "dist/img/icon-128.png"
     },
     "content_security_policy": "default-src 'self';",

@@ -10,8 +10,8 @@
  + 浏览器环境下的英文文档阅读辅助插件
  + 支持单词快速翻译，整句翻译，特殊词汇百科词条链接
  + 可以去扩展程序商店搜索doc-assistant并免费安装 :
- [火狐浏览器安装地址](https://addons.mozilla.org/zh-CN/firefox/addon/doc-assistant/?src=search)  
- [谷歌浏览器还在审核]
+ + 火狐:[火狐浏览器安装地址](https://addons.mozilla.org/zh-CN/firefox/addon/doc-assistant/?src=search)  
+ + chrome:[谷歌浏览器安装地址](https://chrome.google.com/webstore/detail/doc-assistant/llofohehnjedogahngiiaifnfncfbona/related?hl=zh-CN&gl=RU)
  + 这款插件本是为我自己量身定做的，但是考虑到可能有很多和我情况类似的同学也许用得上，所以安排了上架和开源。想直接用可以到浏览器商店安装，如果想按自己的需求修改插件功能可以看下面的步骤：
 
 ## 本地加载方式

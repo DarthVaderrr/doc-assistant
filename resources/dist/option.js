@@ -257,9 +257,13 @@ document.addEventListener('change', e => {
 document.addEventListener('click', e => {
     if (e.target.getAttribute('id') === 'save') save(defaultSettings)
     if (e.target.getAttribute('id') === 'reset') reset()
+    if(e.target.dataset.role==='delete')  deletedHostname(e.target)
+    if(e.target.dataset.role==='add')  addHostname(e.target)
 })
 
 function save(settings) {
+    let disabledList=Array.prototype.map.call(disabled_list.children,i=>i.dataset.value);
+    settings.ignoreList=disabledList;
     _src_js_extension_api_storage__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"].set(
         {
             'settings': JSON.stringify(settings)
@@ -300,6 +304,17 @@ function mapStyle(settings) {
     document.getElementById('doc_assistant_darth_vade').style.cssText = Object(_src_js_utils_createCssBySettings__WEBPACK_IMPORTED_MODULE_1__[/* default */ "a"])(settings);;
 }
 
+function deletedHostname(node){
+    node.parentNode.remove()
+}
+
+function addHostname(node){
+    let value=node.previousElementSibling.value;
+    disabled_list.innerHTML+=`<div class='disable-item' data-value='${value}'>
+    <span>${value}</span> <div class='btn-s' data-role='delete'>删除</div> 
+    </div>`
+}
+
 function initHtml(settings) {
     return `
     <form class="browser-style form column">
@@ -336,8 +351,8 @@ function initHtml(settings) {
         </select>
     </div>
     <div>
-            <label for="font_opacity">字体透明度</label>
-            <input type="number" value="${settings.font_opacity}" step="0.1" max="1" placeholder="0~1" id="font_opacity">
+        <label for="font_opacity">字体透明度</label>
+        <input type="number" value="${settings.font_opacity}" step="0.1" max="1" placeholder="0~1" id="font_opacity">
     </div>
     <div>
         <label for="provider">选择翻译方式</label>
@@ -361,10 +376,21 @@ function initHtml(settings) {
             <option value="none" ${settings.wiki === 'none' ? 'selected' : ''}>不显示</option>
         </select>
     </div>
+
+    <div>
+        <label for="disabel_origin">禁用网站</label>
+        <input type="text" value="localhost" placeholder="输入要禁用的域名" id="disabel_origin">
+        <div class='btn-s' data-role='add'>添加</div> 
+    </div>
+    <div id='disabled_list' class='column'>
+        ${settings.ignoreList.map((i,n)=>`<div class='disable-item' data-value='${i}'>
+        <span>${i}</span> <div class='btn-s' data-role='delete'>删除</div> 
+        </div>`).join('')}
+    </div>
     <br>
     <div>
-            <div class="btn" id="save">保存</div>
-            <div class="btn" id="reset">重置</div>
+        <div class="btn" id="save">保存</div>
+        <div class="btn" id="reset">重置</div>
     </div>
 </form>
     `
@@ -388,7 +414,8 @@ function initHtml(settings) {
     result: "block",
     wiki:"flex",
     hover_bg_color: "rgba(0,0,0,0.9)",
-    provider:'youdao'
+    provider:'youdao',
+    ignoreList:['localhost','127.0.0.1']
 });
 
 /***/ })
